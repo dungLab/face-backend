@@ -22,9 +22,8 @@ export class AllExceptionFilter implements ExceptionFilter {
     response.status(status).json({
       data: null,
       error: {
-        message: HttpStatus[status],
-        description: this.getExceptionMessage(exception) ?? 'unknwon error',
-        code: exception['response']['code'] ?? 0,
+        message: this.getExceptionMessage(exception) ?? 'unknwon error',
+        code: exception['response']?.code ?? 0,
       },
     });
   }
