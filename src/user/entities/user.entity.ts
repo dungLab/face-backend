@@ -3,14 +3,23 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('USER')
+@Index('idx_email_deleted_at', ['email', 'deletedAt'])
 export class UserEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;
+
+  @Column({
+    name: 'email',
+    type: 'varchar',
+    comment: '이메일',
+  })
+  email: string;
 
   @Column({
     name: 'nickname',
