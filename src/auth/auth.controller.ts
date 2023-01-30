@@ -11,7 +11,7 @@ export class AuthController {
   ) {}
 
   @ApiDocs.kakaoLogin('카카오 oauth2.0 callback(redirect uri)')
-  @Get('kakao')
+  @Get('kakao/callback')
   kakaoLogin(@Query('code') code: string) {
     return this.authServices
       .find((_d) => _d.getIdentificationKey() === AuthServiceType.KAKAO)
