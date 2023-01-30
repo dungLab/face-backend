@@ -9,33 +9,61 @@ import { AbstractAuthService } from '@/auth/services/abstract-auth-service';
 import { LoginResponseDto } from '@/auth/dtos/response/login-response.dto';
 import { ErrorResponse } from '@/common/error-response.exception';
 import { KakaoUserInfoDto } from '@/auth/dtos/kakao-user-info.dto';
+import { UserRepository } from '@/user/repositories/user.repository';
+import { generateRandomNickName } from '@/user/utils';
+import { JwtPayload } from '@/auth/types';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class KakaoAuthService extends AbstractAuthService {
   constructor(
+    //services
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
+    private readonly jwtService: JwtService,
+
+    // repositories
+    private readonly userRepository: UserRepository,
   ) {
     super();
   }
 
   async login(code: string): Promise<LoginResponseDto> {
-    const accessToken = await this._getKakaoAccessToken(code);
+    const kakaoAccessToken = await this._getKakaoAccessToken(code);
 
-    const kakaoUserInfo = await this._getKakaoUserInfo(accessToken);
+    const kakaoUserInfo = await this._getKakaoUserInfo(kakaoAccessToken);
+
+    const foundUserEntity = await this.userRepository.findByEmail(
+      kakaoUserInfo.email,
+    );
+
+    if (!foundUserEntity) {
+      //회원가입
+      await this.userRepository.save({
+        email: kakaoUserInfo.email,
+        nickName: generateRandomNickName(),
+        type: AuthServiceType.KAKAO,
+      });
+    }
+
+    const user: JwtPayload = { ...foundUserEntity };
+    const accessToken = this.jwtService.sign(user);
+
+    return { accessToken };
 
     // accessToken: 359.98333분 (5.98시간)
     // refreshToken 86399.98333 (1439.9997221667시간) (59.9999884236124927 일)
+    //TODO: 위 expires는 우리 서비스에선 필요없다.
 
     //TODO:우리 jwt accessToken, refreshToken으로 바꿔서 응답
 
     // https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#request-code-re-authentication
     // 카카오 로그인되어있어도 다시 로그인시키는 문서
 
-    return {
-      accessToken: 'blah blah..',
-      refreshToken: 'blah blah..',
-    };
+    // return {
+    //   accessToken: 'blah blah..',
+    //   refreshToken: 'blah blah..',
+    // };
   }
 
   logout() {
@@ -122,7 +150,7 @@ export class KakaoAuthService extends AbstractAuthService {
 
     if (!userInfo?.kakao_account?.email) {
       throw new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, {
-        message: 'kakao user has noe email',
+        message: 'kakao user has no email',
         code: -10004,
       });
     }
