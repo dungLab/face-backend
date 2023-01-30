@@ -24,6 +24,9 @@ export class KakaoAuthService extends AbstractAuthService {
 
     const kakaoUserInfo = await this._getKakaoUserInfo(accessToken);
 
+    // accessToken: 359.98333분 (5.98시간)
+    // refreshToken 86399.98333 (1439.9997221667시간) (59.9999884236124927 일)
+
     //TODO:우리 jwt accessToken, refreshToken으로 바꿔서 응답
 
     // https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#request-code-re-authentication
