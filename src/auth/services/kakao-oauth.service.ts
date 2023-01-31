@@ -46,20 +46,6 @@ export class KakaoOAuthService extends AbstractOAuthService {
     }
 
     return { ...foundUserEntity };
-
-    // accessToken: 359.98333분 (5.98시간)
-    // refreshToken 86399.98333 (1439.9997221667시간) (59.9999884236124927 일)
-    //TODO: 위 expires는 우리 서비스에선 필요없다.
-
-    //TODO:우리 jwt accessToken, refreshToken으로 바꿔서 응답
-
-    // https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#request-code-re-authentication
-    // 카카오 로그인되어있어도 다시 로그인시키는 문서
-
-    // return {
-    //   accessToken: 'blah blah..',
-    //   refreshToken: 'blah blah..',
-    // };
   }
 
   logout() {
