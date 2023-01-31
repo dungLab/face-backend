@@ -1,8 +1,8 @@
 import { OAuthServiceType } from '@/auth/constants';
-import { LoginResponseDto } from '@/auth/dtos/response/login-response.dto';
+import { JwtPayload } from '@/auth/types';
 
 export abstract class AbstractOAuthService {
-  abstract login(id?: string, pwd?: string): Promise<LoginResponseDto>;
+  abstract login(id?: string, pwd?: string): Promise<JwtPayload>;
 
   abstract logout();
 

@@ -21,7 +21,7 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy, 'jwt') {
     if (!foundUserEntity) {
       throw new ErrorResponse(HttpStatus.UNAUTHORIZED, {
         message: '로그인 필요',
-        //TODO: 에러코드 정의 필요
+        code: -1,
       });
     }
 

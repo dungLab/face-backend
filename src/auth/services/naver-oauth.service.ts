@@ -1,11 +1,11 @@
 import { OAuthServiceType } from '@/auth/constants';
-import { LoginResponseDto } from '@/auth/dtos/response/login-response.dto';
 import { AbstractOAuthService } from '@/auth/services/abstract-oauth-service';
+import { JwtPayload } from '@/auth/types';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class NaverOAuthService extends AbstractOAuthService {
-  login(): Promise<LoginResponseDto> {
+  login(): Promise<JwtPayload> {
     throw new Error('Method not implemented.');
   }
 

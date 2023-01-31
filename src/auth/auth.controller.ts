@@ -1,6 +1,12 @@
 import { ApiDocs } from '@/auth/auth.docs';
+import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { AuthService } from '@/auth/services/auth.service';
-import { Controller, Get, Query } from '@nestjs/common';
+import { JwtPayload } from '@/auth/types';
+import { User } from '@/auth/user.decorator';
+import { UserEntity } from '@/user/entities/user.entity';
+import { Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -10,5 +16,13 @@ export class AuthController {
   @Get('kakao/callback')
   kakaoLogin(@Query('code') code: string) {
     return this.authService.kakaoLogin(code);
+  }
+
+  @ApiDocs.refreshToken('refreshToken으로 accessToken 재발급')
+  @Post('refresh-token')
+  @ApiBearerAuth('jwt')
+  @UseGuards(JwtAuthGuard)
+  refreshToken(@User() user: UserEntity) {
+    return this.authService.refreshToken(user);
   }
 }

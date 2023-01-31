@@ -3,6 +3,7 @@ import { AppService } from '@/app.service';
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { JwtPayload } from '@/auth/types';
 import { User } from '@/auth/user.decorator';
+import { UserEntity } from '@/user/entities/user.entity';
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
@@ -20,7 +21,7 @@ export class AppController {
   @ApiBearerAuth('jwt')
   @UseGuards(JwtAuthGuard)
   @Get('jwt-test')
-  jwtTest(@User() user: JwtPayload) {
+  jwtTest(@User() user: UserEntity) {
     return 'success';
   }
 }

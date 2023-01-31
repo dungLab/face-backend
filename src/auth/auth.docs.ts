@@ -19,4 +19,18 @@ export const ApiDocs: SwaggerMethodDoc<AuthController> = {
       ApiResponse({ status: 403, description: 'Forbidden.' }),
     );
   },
+  refreshToken(summary) {
+    return applyDecorators(
+      ApiOperation({
+        summary: summary,
+        description: '카카오를 이용한 로그인 및 회원가입',
+      }),
+      ApiResponse({
+        status: 201,
+        type: LoginResponseDto,
+        description: '사용자 정상 생성',
+      }),
+      ApiResponse({ status: 403, description: 'Forbidden.' }),
+    );
+  },
 };

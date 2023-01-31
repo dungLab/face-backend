@@ -6,7 +6,6 @@ import { catchError, firstValueFrom, map } from 'rxjs';
 import * as qs from 'qs';
 import { OAuthServiceType } from '@/auth/constants';
 import { AbstractOAuthService } from '@/auth/services/abstract-oauth-service';
-import { LoginResponseDto } from '@/auth/dtos/response/login-response.dto';
 import { ErrorResponse } from '@/common/error-response.exception';
 import { KakaoUserInfoDto } from '@/auth/dtos/kakao-user-info.dto';
 import { UserRepository } from '@/user/repositories/user.repository';
@@ -28,7 +27,7 @@ export class KakaoOAuthService extends AbstractOAuthService {
     super();
   }
 
-  async login(code: string): Promise<LoginResponseDto> {
+  async login(code: string): Promise<JwtPayload> {
     const kakaoAccessToken = await this._getKakaoAccessToken(code);
 
     const kakaoUserInfo = await this._getKakaoUserInfo(kakaoAccessToken);
@@ -46,10 +45,7 @@ export class KakaoOAuthService extends AbstractOAuthService {
       });
     }
 
-    const user: JwtPayload = { ...foundUserEntity };
-    const accessToken = this.jwtService.sign(user);
-
-    return { accessToken };
+    return { ...foundUserEntity };
 
     // accessToken: 359.98333분 (5.98시간)
     // refreshToken 86399.98333 (1439.9997221667시간) (59.9999884236124927 일)

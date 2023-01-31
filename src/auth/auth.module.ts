@@ -16,9 +16,6 @@ import { AuthService } from '@/auth/services/auth.service';
       useFactory: () => {
         return {
           secret: 'face-secret',
-          signOptions: {
-            expiresIn: '14d',
-          },
         };
       },
     }),

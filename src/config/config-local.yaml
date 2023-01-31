@@ -16,3 +16,9 @@ kakao:
     url: 'https://kauth.kakao.com/oauth/authorize'
   token:
     url: 'https://kauth.kakao.com/oauth/token'
+
+jwt:
+  access-token:
+    expires: '20s'
+  refresh-token:
+    expires: '5m'
