@@ -23,12 +23,12 @@ export const ApiDocs: SwaggerMethodDoc<AuthController> = {
     return applyDecorators(
       ApiOperation({
         summary: summary,
-        description: '카카오를 이용한 로그인 및 회원가입',
+        description: 'refreshToken으로 accessToken 재발급',
       }),
       ApiResponse({
         status: 201,
-        type: LoginResponseDto,
-        description: '사용자 정상 생성',
+        type: String,
+        description: 'access token string으로 응답 됨',
       }),
       ApiResponse({ status: 403, description: 'Forbidden.' }),
     );
