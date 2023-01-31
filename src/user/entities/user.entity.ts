@@ -1,3 +1,4 @@
+import { OAuthServiceType } from '@/auth/constants';
 import {
   Column,
   CreateDateColumn,
@@ -10,6 +11,10 @@ import {
 
 @Entity('USER')
 @Index('idx_email_deleted_at', ['email', 'deletedAt'])
+@Index('idx_email_type_deleted_at', ['email', 'type', 'deletedAt'])
+@Index('uc_email_type', ['email', 'type'], {
+  unique: true,
+})
 export class UserEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;
@@ -33,7 +38,7 @@ export class UserEntity {
     type: 'varchar',
     comment: '유저 타입 (kakao, naver, google, apple)',
   })
-  type: string;
+  type: OAuthServiceType;
 
   // TODO: refreshToken 고정된 문자열의 길이이면 char(length) 로 변경
   @Column({ name: 'refresh_token', type: 'varchar', nullable: true })
