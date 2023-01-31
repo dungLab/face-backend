@@ -11,8 +11,8 @@ services:
       MYSQL_USER: dung
       MYSQL_PASSWORD: 1234
     volumes:
-      - ./db/conf.d:/etc/mysql/conf.d
-      - ./db/data:/var/lib/mysql
-      - ./db/initdb.d:/docker-entrypoint-initdb.d
+      - ./db/conf.d:/etc/mysql/conf.d --user 1000
+      - ./db/data:/var/lib/mysql --user 1000
+      - ./db/initdb.d:/docker-entrypoint-initdb.d --user 1000
     ports:
       - "3306:3306"
