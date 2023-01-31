@@ -2,11 +2,14 @@ import {
   OAuthServiceType,
   OAUTH_SERVICES_INJECT_TOKEN,
 } from '@/auth/constants';
+import { KakaoUserInfoDto } from '@/auth/dtos/kakao-user-info.dto';
 import { LoginResponseDto } from '@/auth/dtos/response/login-response.dto';
 import { AbstractOAuthService } from '@/auth/services/abstract-oauth-service';
 import { JwtPayload } from '@/auth/types';
 import { ErrorResponse } from '@/common/error-response.exception';
 import { UserEntity } from '@/user/entities/user.entity';
+import { UserRepository } from '@/user/repositories/user.repository';
+import { generateRandomNickName } from '@/user/utils';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -19,16 +22,32 @@ export class AuthService {
     private readonly oAuthServices: Array<AbstractOAuthService>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+
+    // repositories
+    private readonly userRepository: UserRepository,
   ) {}
 
   async kakaoLogin(code: string): Promise<LoginResponseDto> {
-    const payload = await this.oAuthServices
+    const kakaoUserInfo = (await this.oAuthServices
       .find((_d) => _d.getIdentificationKey() === OAuthServiceType.KAKAO)
-      .login(code);
+      .login(code)) as KakaoUserInfoDto;
+
+    const foundUserEntity = await this.userRepository.findByEmail(
+      kakaoUserInfo.email,
+    );
+
+    if (!foundUserEntity) {
+      //회원가입
+      await this.userRepository.save({
+        email: kakaoUserInfo.email,
+        nickName: generateRandomNickName(),
+        type: OAuthServiceType.KAKAO,
+      });
+    }
 
     return {
-      accessToken: this._generateAccessToken(payload),
-      refreshToken: this._generateRefreshToken(payload),
+      accessToken: this._generateAccessToken({ ...foundUserEntity }),
+      refreshToken: this._generateRefreshToken({ ...foundUserEntity }),
     };
   }
 

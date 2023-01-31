@@ -8,10 +8,6 @@ import { OAuthServiceType } from '@/auth/constants';
 import { AbstractOAuthService } from '@/auth/services/abstract-oauth-service';
 import { ErrorResponse } from '@/common/error-response.exception';
 import { KakaoUserInfoDto } from '@/auth/dtos/kakao-user-info.dto';
-import { UserRepository } from '@/user/repositories/user.repository';
-import { generateRandomNickName } from '@/user/utils';
-import { JwtPayload } from '@/auth/types';
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class KakaoOAuthService extends AbstractOAuthService {
@@ -19,33 +15,16 @@ export class KakaoOAuthService extends AbstractOAuthService {
     //services
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
-    private readonly jwtService: JwtService,
-
-    // repositories
-    private readonly userRepository: UserRepository,
   ) {
     super();
   }
 
-  async login(code: string): Promise<JwtPayload> {
+  async login(code: string): Promise<KakaoUserInfoDto> {
     const kakaoAccessToken = await this._getKakaoAccessToken(code);
 
     const kakaoUserInfo = await this._getKakaoUserInfo(kakaoAccessToken);
 
-    const foundUserEntity = await this.userRepository.findByEmail(
-      kakaoUserInfo.email,
-    );
-
-    if (!foundUserEntity) {
-      //회원가입
-      await this.userRepository.save({
-        email: kakaoUserInfo.email,
-        nickName: generateRandomNickName(),
-        type: OAuthServiceType.KAKAO,
-      });
-    }
-
-    return { ...foundUserEntity };
+    return kakaoUserInfo;
   }
 
   logout() {
