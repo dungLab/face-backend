@@ -1,3 +1,4 @@
+import { OAuthServiceType } from '@/auth/constants';
 import { UserEntity } from '@/user/entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
@@ -12,6 +13,18 @@ export class UserRepository extends Repository<UserEntity> {
     return await this.createQueryBuilder('user')
       .where('user.email = :email', {
         email,
+      })
+      .andWhere('user.deletedAt is null')
+      .getOne();
+  }
+
+  async findByEmailAndType(email: string, type: OAuthServiceType) {
+    return await this.createQueryBuilder('user')
+      .where('user.email = :email', {
+        email,
+      })
+      .andWhere('user.type = :type', {
+        type,
       })
       .andWhere('user.deletedAt is null')
       .getOne();

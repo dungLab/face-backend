@@ -9,6 +9,7 @@ import { JwtPayload } from '@/auth/types';
 import { ErrorResponse } from '@/common/error-response.exception';
 import { UserEntity } from '@/user/entities/user.entity';
 import { UserRepository } from '@/user/repositories/user.repository';
+import { UserService } from '@/user/user.service';
 import { generateRandomNickName } from '@/user/utils';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -22,6 +23,7 @@ export class AuthService {
     private readonly oAuthServices: Array<AbstractOAuthService>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly userService: UserService,
 
     // repositories
     private readonly userRepository: UserRepository,
@@ -32,13 +34,11 @@ export class AuthService {
       .find((_d) => _d.getIdentificationKey() === OAuthServiceType.KAKAO)
       .login(code)) as KakaoUserInfoDto;
 
-    const foundUserEntity = await this.userRepository.findByEmail(
-      kakaoUserInfo.email,
-    );
+    let user = await this.userService.findByKakaoEmail(kakaoUserInfo.email);
 
-    if (!foundUserEntity) {
+    if (!user) {
       //회원가입
-      await this.userRepository.save({
+      user = await this.userRepository.save({
         email: kakaoUserInfo.email,
         nickName: generateRandomNickName(),
         type: OAuthServiceType.KAKAO,
@@ -46,8 +46,8 @@ export class AuthService {
     }
 
     return {
-      accessToken: this._generateAccessToken({ ...foundUserEntity }),
-      refreshToken: this._generateRefreshToken({ ...foundUserEntity }),
+      accessToken: this._generateAccessToken({ ...user }),
+      refreshToken: this._generateRefreshToken({ ...user }),
     };
   }
 

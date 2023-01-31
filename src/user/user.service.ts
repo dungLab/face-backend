@@ -1,3 +1,4 @@
+import { OAuthServiceType } from '@/auth/constants';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { Injectable } from '@nestjs/common';
 
@@ -10,5 +11,12 @@ export class UserService {
 
   async findByEmail(email: string) {
     return await this.userRepository.findByEmail(email);
+  }
+
+  async findByKakaoEmail(email: string) {
+    return await this.userRepository.findByEmailAndType(
+      email,
+      OAuthServiceType.KAKAO,
+    );
   }
 }
