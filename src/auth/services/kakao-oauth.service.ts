@@ -4,8 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { AxiosError } from 'axios';
 import { catchError, firstValueFrom, map } from 'rxjs';
 import * as qs from 'qs';
-import { AuthServiceType } from '@/auth/constants';
-import { AbstractAuthService } from '@/auth/services/abstract-auth-service';
+import { OAuthServiceType } from '@/auth/constants';
+import { AbstractOAuthService } from '@/auth/services/abstract-oauth-service';
 import { LoginResponseDto } from '@/auth/dtos/response/login-response.dto';
 import { ErrorResponse } from '@/common/error-response.exception';
 import { KakaoUserInfoDto } from '@/auth/dtos/kakao-user-info.dto';
@@ -15,7 +15,7 @@ import { JwtPayload } from '@/auth/types';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
-export class KakaoAuthService extends AbstractAuthService {
+export class KakaoOAuthService extends AbstractOAuthService {
   constructor(
     //services
     private readonly configService: ConfigService,
@@ -42,7 +42,7 @@ export class KakaoAuthService extends AbstractAuthService {
       await this.userRepository.save({
         email: kakaoUserInfo.email,
         nickName: generateRandomNickName(),
-        type: AuthServiceType.KAKAO,
+        type: OAuthServiceType.KAKAO,
       });
     }
 
@@ -78,8 +78,8 @@ export class KakaoAuthService extends AbstractAuthService {
     throw new Error('Method not implemented.');
   }
 
-  getIdentificationKey(): AuthServiceType {
-    return AuthServiceType.KAKAO;
+  getIdentificationKey(): OAuthServiceType {
+    return OAuthServiceType.KAKAO;
   }
 
   private async _getKakaoAccessToken(code: string): Promise<string> {

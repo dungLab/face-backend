@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AUTH_SERVICES_INJECT_TOKEN } from './constants';
-import { KakaoAuthService } from './services/kakao-auth.service';
+import { OAUTH_SERVICES_INJECT_TOKEN } from './constants';
+import { KakaoOAuthService } from './services/kakao-oauth.service';
 import { AuthController } from './auth.controller';
-import { NaverAuthService } from './services/naver-auth.service';
+import { NaverOAuthService } from './services/naver-oauth.service';
 import { UserModule } from '@/user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtAuthStrategy } from '@/auth/jwt.strategy';
+import { AuthService } from '@/auth/services/auth.service';
 
 @Module({
   imports: [
@@ -25,15 +26,16 @@ import { JwtAuthStrategy } from '@/auth/jwt.strategy';
   ],
   providers: [
     JwtAuthStrategy,
-    KakaoAuthService,
-    NaverAuthService,
+    KakaoOAuthService,
+    NaverOAuthService,
+    AuthService,
     {
-      provide: AUTH_SERVICES_INJECT_TOKEN,
+      provide: OAUTH_SERVICES_INJECT_TOKEN,
       useFactory: (
-        kakaoAuthService: KakaoAuthService,
-        naverAuthService: NaverAuthService,
-      ) => [kakaoAuthService, naverAuthService],
-      inject: [KakaoAuthService, NaverAuthService],
+        kakaoOAuthService: KakaoOAuthService,
+        naverOAuthService: NaverOAuthService,
+      ) => [kakaoOAuthService, naverOAuthService],
+      inject: [KakaoOAuthService, NaverOAuthService],
     },
   ],
   controllers: [AuthController],

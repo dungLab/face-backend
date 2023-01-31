@@ -1,6 +1,6 @@
-export const AUTH_SERVICES_INJECT_TOKEN = 'authServices';
+export const OAUTH_SERVICES_INJECT_TOKEN = 'OAuthServices';
 
-export enum AuthServiceType {
+export enum OAuthServiceType {
   KAKAO = 'kakao',
   NAVER = 'naver',
 }
