@@ -9,6 +9,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ImageModule } from './image/image.module';
+import { S3Module } from './s3/s3.module';
 @Module({
   imports: [
     // config module
@@ -28,6 +29,8 @@ import { ImageModule } from './image/image.module';
     UserModule,
 
     ImageModule,
+
+    S3Module,
   ],
   controllers: [AppController],
   providers: [AppService],
