@@ -1,10 +1,12 @@
 import { OAuthServiceType } from '@/auth/constants';
+import { ImageEntity } from '@/image/entities/image.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   Index,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -52,4 +54,7 @@ export class UserEntity {
 
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt: Date;
+
+  @OneToMany(() => ImageEntity, (imageEntity) => imageEntity.user)
+  images: ImageEntity[];
 }

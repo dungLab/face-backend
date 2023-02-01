@@ -8,6 +8,7 @@ import { UserModule } from '@/user/user.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ImageModule } from './image/image.module';
 @Module({
   imports: [
     // config module
@@ -25,6 +26,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     AuthModule,
 
     UserModule,
+
+    ImageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
