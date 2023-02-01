@@ -14,7 +14,7 @@ import {
 @Entity('USER')
 @Index('idx_email_deleted_at', ['email', 'deletedAt'])
 @Index('idx_email_type_deleted_at', ['email', 'type', 'deletedAt'])
-@Index('uc_email_type', ['email', 'type'], {
+@Index('uk_email_type', ['email', 'type'], {
   unique: true,
 })
 export class UserEntity {
