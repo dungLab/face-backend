@@ -13,6 +13,14 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseFormatInterceptor());
 
   setupSwagger(app);
+
+  //cors
+  app.enableCors({
+    origin: ['http://localhost:3030'],
+    methods: 'GET, PUT, POST, PATCH, DELETE',
+    credentials: true,
+  });
+
   await app.listen(3000);
 }
 bootstrap();
