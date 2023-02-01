@@ -1,7 +1,6 @@
 import { ApiDocs } from '@/app.docs';
 import { AppService } from '@/app.service';
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
-import { JwtPayload } from '@/auth/types';
 import { User } from '@/auth/user.decorator';
 import { UserEntity } from '@/user/entities/user.entity';
 import { Controller, Get, UseGuards } from '@nestjs/common';
