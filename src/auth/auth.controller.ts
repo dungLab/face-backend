@@ -1,12 +1,10 @@
 import { ApiDocs } from '@/auth/auth.docs';
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { AuthService } from '@/auth/services/auth.service';
-import { JwtPayload } from '@/auth/types';
 import { User } from '@/auth/user.decorator';
 import { UserEntity } from '@/user/entities/user.entity';
-import { Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
