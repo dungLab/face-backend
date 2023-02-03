@@ -1,14 +1,4 @@
-database:
-  host: 'localhost'
-  port: 3306
-  username: 'dung'
-  schema: 'face'
-  password: '1234'
-
 kakao:
-  admin-id: 'c8e5d79b718eb8e048422cedbd8f361f'
-  client-id: '206b93e6e25154a1d06f48c255a8f8b8'
-  client-secret: '6rtrT898WeNXZEgF7Mj5z3Ipb6NOoctl'
   redirect-uri: 'http://localhost:3000/auth/kakao/callback'
   info:
     url: 'https://kapi.kakao.com/v2/user/me'
