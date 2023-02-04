@@ -12,3 +12,6 @@ jwt:
     expires: '3h'
   refresh-token:
     expires: '12d'
+
+front:
+  redirect-uri: 'http://localhost:3030'

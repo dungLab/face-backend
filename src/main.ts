@@ -4,6 +4,7 @@ import { ResponseFormatInterceptor } from '@/common/response-format.interceptor'
 import { setupSwagger } from '@/docs';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,6 +12,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new AllExceptionFilter());
   app.useGlobalInterceptors(new ResponseFormatInterceptor());
+  app.use(cookieParser());
 
   setupSwagger(app);
 

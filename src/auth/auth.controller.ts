@@ -33,15 +33,33 @@ export class AuthController {
 
   @ApiDocs.kakaoCallback('카카오 oauth2.0 callback(redirect uri)')
   @Get('kakao/auth/callback')
-  kakaoCallback(@Query('code') code: string) {
-    return this.authService.kakaoLogin(code);
+  async kakaoCallback(
+    @Query('code') code: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken, refreshToken } = await this.authService.kakaoLogin(
+      code,
+    );
+
+    res.cookie('dunglab-accessToken', accessToken);
+    res.cookie('dunglab-refreshToken', refreshToken);
+
+    const redirectUrl = this.configService.get<string>('front.redirect-uri');
+
+    return res.redirect(301, redirectUrl);
   }
 
   @ApiDocs.refreshToken('refreshToken으로 accessToken 재발급')
   @Post('refresh-token')
   @ApiBearerAuth('jwt')
   @UseGuards(JwtAuthGuard)
-  refreshToken(@User() user: UserEntity) {
-    return this.authService.refreshToken(user);
+  refreshToken(
+    @User() user: UserEntity,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const accessToken = this.authService.refreshToken(user);
+    res.cookie('dunglab-accessToken', accessToken);
+
+    return true;
   }
 }

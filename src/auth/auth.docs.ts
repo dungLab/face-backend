@@ -41,7 +41,7 @@ export const ApiDocs: SwaggerMethodDoc<AuthController> = {
       }),
       ApiResponse({
         status: 201,
-        type: String,
+        type: Boolean,
         description: 'access token string으로 응답 됨',
       }),
       ApiResponse({ status: 403, description: 'Forbidden.' }),
