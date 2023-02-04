@@ -13,11 +13,13 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiDocs } from '@/album/album.docs';
 
 @Controller('album')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 
+  @ApiDocs.upload('앨범 업로드')
   @ApiBearerAuth('jwt')
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -34,10 +36,7 @@ export class AlbumController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('image'))
   @Post()
-  uploadImage(
-    @User() user: UserEntity,
-    @UploadedFile() image: Express.Multer.File,
-  ) {
+  upload(@User() user: UserEntity, @UploadedFile() image: Express.Multer.File) {
     if (!image) {
       throw new ErrorResponse(HttpStatus.BAD_REQUEST, {
         message: 'you need upload file',
