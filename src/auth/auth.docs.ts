@@ -1,6 +1,6 @@
 import { LoginResponseDto } from '@/auth/dtos/response/login-response.dto';
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SwaggerMethodDoc } from 'src/docs/types';
 import { AuthController } from './auth.controller';
 
@@ -35,6 +35,7 @@ export const ApiDocs: SwaggerMethodDoc<AuthController> = {
   },
   refreshToken(summary) {
     return applyDecorators(
+      ApiBearerAuth('jwt'),
       ApiOperation({
         summary: summary,
         description: 'refreshToken으로 accessToken 재발급',

@@ -8,34 +8,18 @@ import {
   Get,
   HttpStatus,
   Post,
-  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { ApiDocs } from '@/album/album.docs';
-import { CursorPaginationRequestDto } from '@/common/dtos/request/pagination-request.dto';
 
 @Controller('album')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 
   @ApiDocs.upload('앨범 업로드')
-  @ApiBearerAuth('jwt')
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        image: {
-          type: 'string',
-          format: 'binary',
-        },
-      },
-    },
-  })
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('image'))
   @Post()
@@ -50,7 +34,6 @@ export class AlbumController {
   }
 
   @ApiDocs.getMany('앨범 리스트 조회')
-  @ApiBearerAuth('jwt')
   @UseGuards(JwtAuthGuard)
   @Get()
   getMany(@User() user: UserEntity) {

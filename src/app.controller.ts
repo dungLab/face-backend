@@ -4,7 +4,6 @@ import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { User } from '@/auth/user.decorator';
 import { UserEntity } from '@/user/entities/user.entity';
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller()
 export class AppController {
@@ -17,7 +16,6 @@ export class AppController {
   }
 
   @ApiDocs.jwtTest('jwt test')
-  @ApiBearerAuth('jwt')
   @UseGuards(JwtAuthGuard)
   @Get('jwt-test')
   jwtTest(@User() user: UserEntity) {

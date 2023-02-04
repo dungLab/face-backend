@@ -1,7 +1,7 @@
 import { AppController } from '@/app.controller';
 import { SwaggerMethodDoc } from '@/docs/types';
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export const ApiDocs: SwaggerMethodDoc<AppController> = {
   healthCheck(summary) {
@@ -19,6 +19,7 @@ export const ApiDocs: SwaggerMethodDoc<AppController> = {
   },
   jwtTest(summary) {
     return applyDecorators(
+      ApiBearerAuth('jwt'),
       ApiOperation({
         summary: summary,
         description: 'jwt test api',

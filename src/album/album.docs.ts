@@ -2,11 +2,30 @@ import { AlbumController } from '@/album/album.controller';
 import { AlbumResponseDto } from '@/album/dtos/response/album-response.dto';
 import { SwaggerMethodDoc } from '@/docs/types';
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 
 export const ApiDocs: SwaggerMethodDoc<AlbumController> = {
   upload(summary) {
     return applyDecorators(
+      ApiBearerAuth('jwt'),
+      ApiConsumes('multipart/form-data'),
+      ApiBody({
+        schema: {
+          type: 'object',
+          properties: {
+            image: {
+              type: 'string',
+              format: 'binary',
+            },
+          },
+        },
+      }),
       ApiOperation({
         summary: summary,
         description: '로그인한 유저가 앨범 하나 업로드',
@@ -21,6 +40,7 @@ export const ApiDocs: SwaggerMethodDoc<AlbumController> = {
   },
   getMany(summary) {
     return applyDecorators(
+      ApiBearerAuth('jwt'),
       ApiOperation({
         summary: summary,
         description: '내 앨범 리스트 조회',

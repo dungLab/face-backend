@@ -5,7 +5,6 @@ import { User } from '@/auth/user.decorator';
 import { UserEntity } from '@/user/entities/user.entity';
 import { Controller, Get, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ApiBearerAuth } from '@nestjs/swagger';
 import { Response } from 'express';
 
 @Controller('auth')
@@ -46,7 +45,6 @@ export class AuthController {
 
   @ApiDocs.refreshToken('refreshToken으로 accessToken 재발급')
   @Post('refresh-token')
-  @ApiBearerAuth('jwt')
   @UseGuards(JwtAuthGuard)
   refreshToken(@User() user: UserEntity, @Res() res: Response) {
     const accessToken = this.authService.refreshToken(user);
