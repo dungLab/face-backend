@@ -23,7 +23,7 @@ import { ApiTags } from '@nestjs/swagger';
 export class PhotoController {
   constructor(private readonly photoService: PhotoService) {}
 
-  @ApiDocs.upload('앨범 업로드')
+  @ApiDocs.upload('포토 업로드')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('image'))
   @Post()
@@ -37,7 +37,7 @@ export class PhotoController {
     return this.photoService.upload(user, image);
   }
 
-  @ApiDocs.getMany('앨범 리스트 조회')
+  @ApiDocs.getMany('포토 리스트 조회')
   @UseGuards(JwtAuthGuard)
   @Get()
   getMany(@User() user: UserEntity) {
@@ -45,7 +45,7 @@ export class PhotoController {
     return this.photoService.findMany(user);
   }
 
-  @ApiDocs.getOne('앨범 하나 조회')
+  @ApiDocs.getOne('포토 하나 조회')
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   getOne(@User() user: UserEntity, @Param('id', ParseIntPipe) id: number) {
