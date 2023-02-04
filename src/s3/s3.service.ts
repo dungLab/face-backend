@@ -1,29 +1,59 @@
-import { Injectable } from '@nestjs/common';
+import { ErrorResponse } from '@/common/error-response.exception';
+import { getCurrentDateFormat } from '@/common/utils/date.util';
+import { FaceFolderType, S3BucketType } from '@/s3/constants';
+import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as AWS from 'aws-sdk';
+import { AWSRegion } from 'aws-sdk/clients/cur';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class S3Service {
-  private s3: AWS.S3;
   private accessKey?: string;
   private secretAccessKey?: string;
-  private region?: string;
-  private bucket: any;
-  private baseUrl: string;
 
   constructor(private readonly configService: ConfigService) {
     this.accessKey = this.configService.get('aws.accessKey');
     this.secretAccessKey = this.configService.get('aws.secretAccessKey');
-    this.region = this.configService.get('aws.region');
-    this.bucket = this.configService.get('aws.s3.bucket');
-    this.baseUrl = `https://${this.bucket}.s3.${this.region}.amazonaws.com`;
-
-    this.s3 = new AWS.S3({
-      accessKeyId: this.accessKey,
-      secretAccessKey: this.secretAccessKey,
-      region: this.region,
-    });
   }
 
-  //TODO: make S3 upload service
+  async upload(
+    file: Express.Multer.File,
+    region: AWSRegion,
+    bucket: S3BucketType,
+    folder: FaceFolderType,
+  ) {
+    const s3 = new AWS.S3({
+      accessKeyId: this.accessKey,
+      secretAccessKey: this.secretAccessKey,
+      region,
+    });
+    const param = {
+      Bucket: bucket,
+      Key: `${folder}/${this._generateFileName(file.originalname)}`,
+      Body: file.buffer,
+      ACL: 'public-read',
+      ContentType: file.mimetype,
+    };
+
+    try {
+      const uploadedFile = await s3.upload(param).promise();
+
+      console.log('upload success');
+    } catch (err) {
+      Logger.error(err);
+      throw new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, {
+        message: 'upload file to s3 fail',
+        code: -1,
+      });
+    }
+  }
+
+  private _generateFileName(fileName: string) {
+    const fileExt = `.${fileName.split('.').pop()}`;
+    return getCurrentDateFormat('yyyyMMdd')
+      .concat('-')
+      .concat(crypto.randomBytes(20).toString('hex'))
+      .concat(fileExt);
+  }
 }

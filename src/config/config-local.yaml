@@ -9,6 +9,6 @@ kakao:
 
 jwt:
   access-token:
-    expires: '20s'
+    expires: '3h'
   refresh-token:
-    expires: '5m'
+    expires: '12d'

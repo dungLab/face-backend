@@ -2,6 +2,7 @@ import { readFileSync } from 'fs';
 import * as yaml from 'js-yaml';
 import { join } from 'path';
 import * as dotenv from 'dotenv';
+import * as _ from 'lodash';
 
 dotenv.config();
 
@@ -65,5 +66,5 @@ export function configuration() {
 
   const sercretEnvConfiguartion = getSecretConfiguration();
 
-  return Object.assign({}, baseEnvConfiguration, sercretEnvConfiguartion);
+  return _.merge({}, baseEnvConfiguration, sercretEnvConfiguartion);
 }
