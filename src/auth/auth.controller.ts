@@ -48,13 +48,10 @@ export class AuthController {
   @Post('refresh-token')
   @ApiBearerAuth('jwt')
   @UseGuards(JwtAuthGuard)
-  refreshToken(
-    @User() user: UserEntity,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  refreshToken(@User() user: UserEntity, @Res() res: Response) {
     const accessToken = this.authService.refreshToken(user);
     res.cookie('dunglab-accessToken', accessToken);
 
-    return true;
+    return accessToken;
   }
 }
