@@ -16,7 +16,7 @@ import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
 
 @Controller('album')
 export class AlbumController {
-  constructor(private readonly imageService: AlbumService) {}
+  constructor(private readonly albumService: AlbumService) {}
 
   @ApiBearerAuth('jwt')
   @ApiConsumes('multipart/form-data')
@@ -44,6 +44,6 @@ export class AlbumController {
         code: -1,
       });
     }
-    return this.imageService.upload(image);
+    return this.albumService.upload(user, image);
   }
 }

@@ -37,7 +37,7 @@ export class AlbumEntity {
 
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.albums)
   @JoinColumn({
-    name: 'userId',
+    name: 'user_id',
     referencedColumnName: 'id',
     foreignKeyConstraintName: 'fk_user_id',
   })
