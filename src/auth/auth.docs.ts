@@ -13,6 +13,20 @@ export const ApiDocs: SwaggerMethodDoc<AuthController> = {
       }),
       ApiResponse({
         status: 201,
+        type: Boolean,
+        description: '사용자 정상 생성',
+      }),
+      ApiResponse({ status: 403, description: 'Forbidden.' }),
+    );
+  },
+  kakaoCallback(summary) {
+    return applyDecorators(
+      ApiOperation({
+        summary: summary,
+        description: '카카오 call back',
+      }),
+      ApiResponse({
+        status: 201,
         type: LoginResponseDto,
         description: '사용자 정상 생성',
       }),
