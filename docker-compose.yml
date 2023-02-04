@@ -10,6 +10,7 @@ services:
       MYSQL_DATABASE: face
       MYSQL_USER: dung
       MYSQL_PASSWORD: 1234
+      TZ: Asia/Seoul
     volumes:
       - ./db/conf.d:/etc/mysql/conf.d --user 1000
       - ./db/data:/var/lib/mysql --user 1000
