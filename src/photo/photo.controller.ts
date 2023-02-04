@@ -7,6 +7,8 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
+  ParseIntPipe,
   Post,
   UploadedFile,
   UseGuards,
@@ -41,5 +43,12 @@ export class PhotoController {
   getMany(@User() user: UserEntity) {
     //TODO: 커서기반 페이지네이션
     return this.photoService.findMany(user);
+  }
+
+  @ApiDocs.getOne('앨범 하나 조회')
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  getOne(@User() user: UserEntity, @Param('id', ParseIntPipe) id: number) {
+    return this.photoService.findOne(id);
   }
 }

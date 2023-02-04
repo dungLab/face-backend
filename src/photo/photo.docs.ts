@@ -54,4 +54,19 @@ export const ApiDocs: SwaggerMethodDoc<PhotoController> = {
       ApiResponse({ status: 403, description: 'Forbidden.' }),
     );
   },
+  getOne(summary) {
+    return applyDecorators(
+      ApiBearerAuth('jwt'),
+      ApiOperation({
+        summary: summary,
+        description: '앨범 id로 하나 조회',
+      }),
+      ApiResponse({
+        status: 201,
+        type: PhotoResponseDto,
+        description: '앨범 조회 성공',
+      }),
+      ApiResponse({ status: 403, description: 'Forbidden.' }),
+    );
+  },
 };
