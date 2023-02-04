@@ -11,7 +11,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiDocs.kakaoLogin('카카오 oauth2.0 callback(redirect uri)')
-  @Get('kakao/callback')
+  @Get('kakao-login')
   kakaoLogin(@Query('code') code: string) {
     return this.authService.kakaoLogin(code);
   }
