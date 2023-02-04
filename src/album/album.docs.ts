@@ -1,4 +1,5 @@
 import { AlbumController } from '@/album/album.controller';
+import { AlbumResponseDto } from '@/album/dtos/response/album-response.dto';
 import { SwaggerMethodDoc } from '@/docs/types';
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -14,6 +15,20 @@ export const ApiDocs: SwaggerMethodDoc<AlbumController> = {
         status: 201,
         type: Boolean,
         description: '앨범 생성 성공',
+      }),
+      ApiResponse({ status: 403, description: 'Forbidden.' }),
+    );
+  },
+  getMany(summary) {
+    return applyDecorators(
+      ApiOperation({
+        summary: summary,
+        description: '내 앨범 리스트 조회',
+      }),
+      ApiResponse({
+        status: 201,
+        type: AlbumResponseDto,
+        description: '앨범 리스트 조회 성공',
       }),
       ApiResponse({ status: 403, description: 'Forbidden.' }),
     );

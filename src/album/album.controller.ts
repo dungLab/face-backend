@@ -5,8 +5,10 @@ import { AlbumService } from '@/album/album.service';
 import { UserEntity } from '@/user/entities/user.entity';
 import {
   Controller,
+  Get,
   HttpStatus,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -14,6 +16,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { ApiDocs } from '@/album/album.docs';
+import { CursorPaginationRequestDto } from '@/common/dtos/request/pagination-request.dto';
 
 @Controller('album')
 export class AlbumController {
@@ -44,5 +47,14 @@ export class AlbumController {
       });
     }
     return this.albumService.upload(user, image);
+  }
+
+  @ApiDocs.getMany('앨범 리스트 조회')
+  @ApiBearerAuth('jwt')
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  getMany(@User() user: UserEntity) {
+    //TODO: 커서기반 페이지네이션
+    return this.albumService.findMany(user);
   }
 }

@@ -1,4 +1,6 @@
+import { AlbumResponseDto } from '@/album/dtos/response/album-response.dto';
 import { AlbumRepository } from '@/album/repositories/album.repository';
+import { getDateFormat } from '@/common/utils/date.util';
 import { FaceFolderType, S3BucketType } from '@/s3/constants';
 import { S3Service } from '@/s3/s3.service';
 import { UserEntity } from '@/user/entities/user.entity';
@@ -30,5 +32,19 @@ export class AlbumService {
     });
 
     return true;
+  }
+
+  async findMany(user: UserEntity): Promise<AlbumResponseDto[]> {
+    const userId = user.id;
+
+    const foundAlbumEntities =
+      await this.albumRepository.findManyCursorByUserId(userId);
+
+    return foundAlbumEntities.map((_d) => {
+      return {
+        url: _d.url,
+        createdAt: getDateFormat(_d.createdAt),
+      };
+    });
   }
 }
