@@ -16,7 +16,7 @@ export class AuthController {
   ) {}
 
   @ApiDocs.kakaoLogin('카카오 로그인')
-  @Post('kakao-login')
+  @Get('kakao-login')
   kakaoLogin(@Res() res: Response) {
     const redirectUrl = `${this.configService.get<string>(
       'kakao.authorize.url',
@@ -26,15 +26,12 @@ export class AuthController {
       'kakao.redirect-uri',
     )}&response_type=code`;
 
-    return res.redirect(301, redirectUrl);
+    res.redirect(301, redirectUrl);
   }
 
   @ApiDocs.kakaoCallback('카카오 oauth2.0 callback(redirect uri)')
   @Get('kakao/callback')
-  async kakaoCallback(
-    @Query('code') code: string,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async kakaoCallback(@Query('code') code: string, @Res() res: Response) {
     const { accessToken, refreshToken } = await this.authService.kakaoLogin(
       code,
     );
@@ -44,7 +41,7 @@ export class AuthController {
 
     const redirectUrl = this.configService.get<string>('front.redirect-uri');
 
-    return res.redirect(301, redirectUrl);
+    res.redirect(301, redirectUrl);
   }
 
   @ApiDocs.refreshToken('refreshToken으로 accessToken 재발급')
