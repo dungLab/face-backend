@@ -26,8 +26,6 @@ export class AuthController {
       'kakao.redirect-uri',
     )}&response_type=code`;
 
-    console.log(redirectUrl);
-
     return res.redirect(301, redirectUrl);
   }
 
