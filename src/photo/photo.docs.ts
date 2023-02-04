@@ -48,6 +48,7 @@ export const ApiDocs: SwaggerMethodDoc<PhotoController> = {
       ApiResponse({
         status: 201,
         type: PhotoResponseDto,
+        isArray: true,
         description: '앨범 리스트 조회 성공',
       }),
       ApiResponse({ status: 403, description: 'Forbidden.' }),
