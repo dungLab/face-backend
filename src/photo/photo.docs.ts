@@ -1,5 +1,5 @@
-import { AlbumController } from '@/album/album.controller';
-import { AlbumResponseDto } from '@/album/dtos/response/album-response.dto';
+import { PhotoController } from '@/photo/photo.controller';
+import { PhotoResponseDto } from '@/photo/dtos/response/photo-response.dto';
 import { SwaggerMethodDoc } from '@/docs/types';
 import { applyDecorators } from '@nestjs/common';
 import {
@@ -10,7 +10,7 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 
-export const ApiDocs: SwaggerMethodDoc<AlbumController> = {
+export const ApiDocs: SwaggerMethodDoc<PhotoController> = {
   upload(summary) {
     return applyDecorators(
       ApiBearerAuth('jwt'),
@@ -47,7 +47,7 @@ export const ApiDocs: SwaggerMethodDoc<AlbumController> = {
       }),
       ApiResponse({
         status: 201,
-        type: AlbumResponseDto,
+        type: PhotoResponseDto,
         description: '앨범 리스트 조회 성공',
       }),
       ApiResponse({ status: 403, description: 'Forbidden.' }),

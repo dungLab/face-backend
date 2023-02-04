@@ -1,4 +1,4 @@
-export class AlbumResponseDto {
+export class PhotoResponseDto {
   url: string;
   createdAt: string;
 }

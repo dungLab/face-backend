@@ -1,5 +1,5 @@
-import { AlbumResponseDto } from '@/album/dtos/response/album-response.dto';
-import { AlbumRepository } from '@/album/repositories/album.repository';
+import { PhotoResponseDto } from '@/photo/dtos/response/photo-response.dto';
+import { PhotoRepository } from '@/photo/repositories/photo.repository';
 import { getDateFormat } from '@/common/utils/date.util';
 import { FaceFolderType, S3BucketType } from '@/s3/constants';
 import { S3Service } from '@/s3/s3.service';
@@ -7,13 +7,13 @@ import { UserEntity } from '@/user/entities/user.entity';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class AlbumService {
+export class PhotoService {
   constructor(
     //services
     private readonly s3Service: S3Service,
 
     //repositories
-    private readonly albumRepository: AlbumRepository,
+    private readonly photoRepository: PhotoRepository,
   ) {}
 
   async upload(user: UserEntity, image: Express.Multer.File) {
@@ -26,7 +26,7 @@ export class AlbumService {
         : FaceFolderType.DEVELOPMENT,
     );
 
-    await this.albumRepository.save({
+    await this.photoRepository.save({
       url: uploadedFileUrl,
       userId: user.id,
     });
@@ -34,13 +34,13 @@ export class AlbumService {
     return true;
   }
 
-  async findMany(user: UserEntity): Promise<AlbumResponseDto[]> {
+  async findMany(user: UserEntity): Promise<PhotoResponseDto[]> {
     const userId = user.id;
 
-    const foundAlbumEntities =
-      await this.albumRepository.findManyCursorByUserId(userId);
+    const foundPhotoEntities =
+      await this.photoRepository.findManyCursorByUserId(userId);
 
-    return foundAlbumEntities.map((_d) => {
+    return foundPhotoEntities.map((_d) => {
       return {
         url: _d.url,
         createdAt: getDateFormat(_d.createdAt),

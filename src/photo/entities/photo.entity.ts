@@ -10,8 +10,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('ALBUM')
-export class AlbumEntity {
+@Entity('PHOTO')
+export class PhotoEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;
 
@@ -35,7 +35,7 @@ export class AlbumEntity {
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt: Date;
 
-  @ManyToOne(() => UserEntity, (userEntity) => userEntity.albums)
+  @ManyToOne(() => UserEntity, (userEntity) => userEntity.photos)
   @JoinColumn({
     name: 'user_id',
     referencedColumnName: 'id',

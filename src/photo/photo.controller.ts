@@ -1,7 +1,7 @@
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { User } from '@/auth/user.decorator';
 import { ErrorResponse } from '@/common/error-response.exception';
-import { AlbumService } from '@/album/album.service';
+import { PhotoService } from '@/photo/photo.service';
 import { UserEntity } from '@/user/entities/user.entity';
 import {
   Controller,
@@ -13,11 +13,11 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiDocs } from '@/album/album.docs';
+import { ApiDocs } from '@/photo/photo.docs';
 
-@Controller('album')
-export class AlbumController {
-  constructor(private readonly albumService: AlbumService) {}
+@Controller('photos')
+export class PhotoController {
+  constructor(private readonly photoService: PhotoService) {}
 
   @ApiDocs.upload('앨범 업로드')
   @UseGuards(JwtAuthGuard)
@@ -30,7 +30,7 @@ export class AlbumController {
         code: -1,
       });
     }
-    return this.albumService.upload(user, image);
+    return this.photoService.upload(user, image);
   }
 
   @ApiDocs.getMany('앨범 리스트 조회')
@@ -38,6 +38,6 @@ export class AlbumController {
   @Get()
   getMany(@User() user: UserEntity) {
     //TODO: 커서기반 페이지네이션
-    return this.albumService.findMany(user);
+    return this.photoService.findMany(user);
   }
 }
