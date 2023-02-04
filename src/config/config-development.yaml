@@ -1,6 +1,4 @@
 kakao:
-  # TODO:change dev server url
-  redirect-uri: 'http://localhost:3000/auth/kakao/callback'
   info:
     url: 'https://kapi.kakao.com/v2/user/me'
   authorize:

@@ -1,8 +1,6 @@
 kakao:
-  # TODO:change prod server url
-  redirect-uri: 'http://localhost:3000/auth/kakao/callback'
   info:
-    url: 'https://kapi.kakao.com/v2/user/me'A
+    url: 'https://kapi.kakao.com/v2/user/me'
   authorize:
     url: 'https://kauth.kakao.com/oauth/authorize'
   token:

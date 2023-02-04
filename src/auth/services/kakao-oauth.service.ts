@@ -57,7 +57,6 @@ export class KakaoOAuthService extends AbstractOAuthService {
             client_secret: this.configService.get<string>(
               'kakao.client-secret',
             ),
-            redirect_uri: this.configService.get<string>('redirect-uri'),
           }),
           // config
           {
