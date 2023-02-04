@@ -39,7 +39,7 @@ export class S3Service {
     try {
       const uploadedFile = await s3.upload(param).promise();
 
-      console.log('upload success');
+      return uploadedFile.Location;
     } catch (err) {
       Logger.error(err);
       throw new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, {

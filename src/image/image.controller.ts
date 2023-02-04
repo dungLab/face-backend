@@ -1,9 +1,11 @@
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { User } from '@/auth/user.decorator';
+import { ErrorResponse } from '@/common/error-response.exception';
 import { ImageService } from '@/image/image.service';
 import { UserEntity } from '@/user/entities/user.entity';
 import {
   Controller,
+  HttpStatus,
   Post,
   UploadedFile,
   UseGuards,
@@ -36,6 +38,12 @@ export class ImageController {
     @User() user: UserEntity,
     @UploadedFile() image: Express.Multer.File,
   ) {
+    if (!image) {
+      throw new ErrorResponse(HttpStatus.BAD_REQUEST, {
+        message: 'you need upload file',
+        code: -1,
+      });
+    }
     return this.imageService.uploadImage(image);
   }
 }

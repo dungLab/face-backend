@@ -1,5 +1,5 @@
 export enum S3BucketType {
-  FACE = 'face',
+  FACE = 'face-album',
 }
 
 export enum FaceFolderType {
