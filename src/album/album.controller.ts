@@ -1,7 +1,7 @@
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { User } from '@/auth/user.decorator';
 import { ErrorResponse } from '@/common/error-response.exception';
-import { ImageService } from '@/image/image.service';
+import { AlbumService } from '@/album/album.service';
 import { UserEntity } from '@/user/entities/user.entity';
 import {
   Controller,
@@ -14,9 +14,9 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
 
-@Controller('image')
-export class ImageController {
-  constructor(private readonly imageService: ImageService) {}
+@Controller('album')
+export class AlbumController {
+  constructor(private readonly imageService: AlbumService) {}
 
   @ApiBearerAuth('jwt')
   @ApiConsumes('multipart/form-data')
@@ -44,6 +44,6 @@ export class ImageController {
         code: -1,
       });
     }
-    return this.imageService.uploadImage(image);
+    return this.imageService.upload(image);
   }
 }

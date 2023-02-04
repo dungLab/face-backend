@@ -4,7 +4,7 @@ import { AuthModule } from '@/auth/auth.module';
 import { configuration } from '@/config/configuration';
 import { ormconfig } from '@/config/ormconfig';
 import { HttpModule } from '@/http/http.module';
-import { ImageModule } from '@/image/image.module';
+import { AlbumModule } from '@/album/album.module';
 import { S3Module } from '@/s3/s3.module';
 import { UserModule } from '@/user/user.module';
 import { Module } from '@nestjs/common';
@@ -28,7 +28,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
     UserModule,
 
-    ImageModule,
+    AlbumModule,
 
     S3Module,
   ],

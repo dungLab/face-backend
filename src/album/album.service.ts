@@ -3,12 +3,12 @@ import { S3Service } from '@/s3/s3.service';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class ImageService {
+export class AlbumService {
   constructor(
     //services
     private readonly s3Service: S3Service,
   ) {}
-  async uploadImage(image: Express.Multer.File) {
+  async upload(image: Express.Multer.File) {
     // return
     return await this.s3Service.upload(
       image,

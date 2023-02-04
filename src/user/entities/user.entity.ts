@@ -1,5 +1,5 @@
 import { OAuthServiceType } from '@/auth/constants';
-import { ImageEntity } from '@/image/entities/image.entity';
+import { AlbumEntity } from '@/album/entities/album.entity';
 import {
   Column,
   CreateDateColumn,
@@ -55,6 +55,6 @@ export class UserEntity {
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt: Date;
 
-  @OneToMany(() => ImageEntity, (imageEntity) => imageEntity.user)
-  images: ImageEntity[];
+  @OneToMany(() => AlbumEntity, (imageEntity) => imageEntity.user)
+  albums: AlbumEntity[];
 }
