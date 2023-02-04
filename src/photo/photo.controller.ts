@@ -14,7 +14,9 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiDocs } from '@/photo/photo.docs';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('face > 포토')
 @Controller('photos')
 export class PhotoController {
   constructor(private readonly photoService: PhotoService) {}

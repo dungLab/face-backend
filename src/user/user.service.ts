@@ -1,4 +1,7 @@
 import { OAuthServiceType } from '@/auth/constants';
+import { getDateFormat } from '@/common/utils/date.util';
+import { UserReseponseDto } from '@/user/dtos/response/user-response.dto';
+import { UserEntity } from '@/user/entities/user.entity';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { Injectable } from '@nestjs/common';
 
@@ -18,5 +21,13 @@ export class UserService {
       email,
       OAuthServiceType.KAKAO,
     );
+  }
+
+  getUserInfo(user: UserEntity): UserReseponseDto {
+    return {
+      email: user.email,
+      nickName: user.nickName,
+      createdAt: getDateFormat(user.createdAt),
+    };
   }
 }

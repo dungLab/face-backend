@@ -5,8 +5,10 @@ import { User } from '@/auth/user.decorator';
 import { UserEntity } from '@/user/entities/user.entity';
 import { Controller, Get, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
+@ApiTags('face > 인증')
 @Controller('auth')
 export class AuthController {
   constructor(
