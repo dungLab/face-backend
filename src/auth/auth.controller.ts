@@ -30,7 +30,7 @@ export class AuthController {
   }
 
   @ApiDocs.kakaoCallback('카카오 oauth2.0 callback(redirect uri)')
-  @Get('kakao/auth/callback')
+  @Get('kakao/callback')
   async kakaoCallback(
     @Query('code') code: string,
     @Res({ passthrough: true }) res: Response,
