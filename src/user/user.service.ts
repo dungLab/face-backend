@@ -25,6 +25,7 @@ export class UserService {
 
   getUserInfo(user: UserEntity): UserReseponseDto {
     return {
+      id: user.id,
       email: user.email,
       nickName: user.nickName,
       createdAt: getDateFormat(user.createdAt),
