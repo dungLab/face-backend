@@ -104,17 +104,17 @@ export class PhotoService {
       return {
         id: _d.id,
         url: _d.url,
+        description: _d.description,
+        span: _d.span,
+        userNickName: _d.user.nickName,
         createdAt: getDateFormat(_d.createdAt),
+        hashTags: _d.photoHashTags.map((__d) => __d.hashTag.name),
       };
     });
   }
 
   async findOne(id: number): Promise<PhotoResponseDto> {
-    const foundPhotoEntity = await this.photoRepository.findOne({
-      where: {
-        id,
-      },
-    });
+    const foundPhotoEntity = await this.photoRepository.findOneById(id);
 
     if (!foundPhotoEntity) {
       throw new ErrorResponse(HttpStatus.BAD_REQUEST, {
@@ -126,7 +126,11 @@ export class PhotoService {
     return {
       id: foundPhotoEntity.id,
       url: foundPhotoEntity.url,
+      description: foundPhotoEntity.description,
+      span: foundPhotoEntity.span,
+      userNickName: foundPhotoEntity.user.nickName,
       createdAt: getDateFormat(foundPhotoEntity.createdAt),
+      hashTags: foundPhotoEntity.photoHashTags.map((_d) => _d.hashTag.name),
     };
   }
 }

@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
 export class PhotoResponseDto {
   @ApiProperty()
@@ -8,5 +9,19 @@ export class PhotoResponseDto {
   url: string;
 
   @ApiProperty()
+  description: string;
+
+  @ApiProperty({
+    description: '평가 기간',
+  })
+  span: number;
+
+  @IsString()
+  userNickName: string;
+
+  @ApiProperty()
   createdAt: string;
+
+  @ApiProperty()
+  hashTags: string[];
 }

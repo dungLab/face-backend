@@ -30,11 +30,25 @@ export class PhotoRepository extends Repository<PhotoEntity> {
   async findManyCursorByUserId(userId: number) {
     return await this._getBaseQueryBuilder()
       .leftJoinAndSelect('photo.user', 'user')
+      .leftJoinAndSelect('photo.photoHashTags', 'photoHashTags')
+      .leftJoinAndSelect('photoHashTags.hashTag', 'hashTag')
       .where('photo.userId = :userId', {
         userId,
       })
       .andWhere('photo.deletedAt is null')
       .orderBy('photo.id', 'DESC')
       .getMany();
+  }
+
+  async findOneById(id: number) {
+    return await this._getBaseQueryBuilder()
+      .leftJoinAndSelect('photo.user', 'user')
+      .leftJoinAndSelect('photo.photoHashTags', 'photoHashTags')
+      .leftJoinAndSelect('photoHashTags.hashTag', 'hashTag')
+      .where('photo.id = :id', {
+        id,
+      })
+      .andWhere('photo.deletedAt is null')
+      .getOne();
   }
 }
