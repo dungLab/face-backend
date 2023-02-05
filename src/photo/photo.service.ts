@@ -6,18 +6,31 @@ import { S3Service } from '@/s3/s3.service';
 import { UserEntity } from '@/user/entities/user.entity';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ErrorResponse } from '@/common/error-response.exception';
+import { PhotoRequestDto } from '@/photo/dtos/request/photo-request.dto';
+import { DataSource } from 'typeorm';
+import { HashTagReository } from '@/photo/repositories/hashtag.repository';
+import { PhotoHashTagRepository } from '@/photo/repositories/photo-hashtag.repository';
+import { HashTagEntity } from '@/photo/entities/hashtag.entity';
+import * as _ from 'lodash';
 
 @Injectable()
 export class PhotoService {
   constructor(
     //services
     private readonly s3Service: S3Service,
+    private readonly dataSource: DataSource,
 
     //repositories
     private readonly photoRepository: PhotoRepository,
+    private readonly hashTagRepository: HashTagReository,
+    private readonly photoHashTagRepository: PhotoHashTagRepository,
   ) {}
 
-  async upload(user: UserEntity, image: Express.Multer.File) {
+  async upload(
+    user: UserEntity,
+    image: Express.Multer.File,
+    photoRequestDto: PhotoRequestDto,
+  ) {
     const uploadedFileUrl = await this.s3Service.upload(
       image,
       'ap-northeast-2',
@@ -27,10 +40,56 @@ export class PhotoService {
         : FaceFolderType.DEVELOPMENT,
     );
 
-    await this.photoRepository.save({
+    const { span, hashTag, description } = photoRequestDto;
+
+    const savedPhotoEntity = await this.photoRepository.save({
       url: uploadedFileUrl,
       userId: user.id,
+      span,
+      description,
     });
+
+    if (hashTag) {
+      await this.saveHashTags(hashTag, savedPhotoEntity.id);
+    }
+
+    return true;
+  }
+
+  async saveHashTags(hashTag: string, photoId: number) {
+    const hashTagArr = hashTag.split(',').map((_d) => _d.trim());
+
+    const alreadyExistedHashTagEntities =
+      await this.hashTagRepository.findManyByNames(hashTagArr);
+
+    const newHashTagEntities = hashTagArr.map((_d): HashTagEntity => {
+      return this.hashTagRepository.create({
+        name: _d,
+      });
+    });
+
+    const hasSaveTagEntities = newHashTagEntities.filter((n) => {
+      return !alreadyExistedHashTagEntities.find((a) => a.name === n.name);
+    });
+
+    // hashtag
+    const savedHashTags = await this.hashTagRepository.save(hasSaveTagEntities);
+
+    const alreadyHashTagIds = alreadyExistedHashTagEntities.map((_d) => _d.id);
+    const savedHashTagIds = savedHashTags.map((_d) => _d.id);
+
+    const hasSavePhotoHashTagEntities = [
+      ...alreadyHashTagIds,
+      ...savedHashTagIds,
+    ].map((hashTagId) => {
+      return this.photoHashTagRepository.create({
+        photoId,
+        hashTagId,
+      });
+    });
+
+    // photo-hashtag
+    await this.photoHashTagRepository.save(hasSavePhotoHashTagEntities);
 
     return true;
   }

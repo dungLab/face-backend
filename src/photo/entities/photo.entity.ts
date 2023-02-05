@@ -1,3 +1,4 @@
+import { PhotoHashTagEntity } from '@/photo/entities/photo-hashtag.entity';
 import { UserEntity } from '@/user/entities/user.entity';
 import {
   Column,
@@ -6,6 +7,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -26,6 +28,17 @@ export class PhotoEntity {
   })
   userId: number;
 
+  @Column({ name: 'description', type: 'varchar', comment: 'description' })
+  description: string;
+
+  @Column({
+    name: 'span',
+    type: 'int',
+    unsigned: true,
+    comment: '평가 기간(hour기준)',
+  })
+  span: number;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
@@ -42,4 +55,7 @@ export class PhotoEntity {
     foreignKeyConstraintName: 'fk_user_id',
   })
   user: UserEntity;
+
+  @OneToMany(() => PhotoHashTagEntity, (photoHashTag) => photoHashTag.photo)
+  photoHashTags: PhotoHashTagEntity[];
 }

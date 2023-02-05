@@ -4,6 +4,7 @@ import { ErrorResponse } from '@/common/error-response.exception';
 import { PhotoService } from '@/photo/photo.service';
 import { UserEntity } from '@/user/entities/user.entity';
 import {
+  Body,
   Controller,
   Get,
   HttpStatus,
@@ -17,24 +18,34 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiDocs } from '@/photo/photo.docs';
 import { ApiTags } from '@nestjs/swagger';
+import { PhotoRequestDto } from '@/photo/dtos/request/photo-request.dto';
+import { imageFileFilter } from '@/common/interceptors/image-file.interceptor';
 
 @ApiTags('face > 포토')
 @Controller('photos')
 export class PhotoController {
   constructor(private readonly photoService: PhotoService) {}
 
-  @ApiDocs.upload('포토 업로드')
+  @ApiDocs.upload('포토 생성')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(
+    FileInterceptor('image', {
+      fileFilter: imageFileFilter,
+    }),
+  )
   @Post()
-  upload(@User() user: UserEntity, @UploadedFile() image: Express.Multer.File) {
+  upload(
+    @User() user: UserEntity,
+    @UploadedFile() image: Express.Multer.File,
+    @Body() photoRequestDto: PhotoRequestDto,
+  ) {
     if (!image) {
       throw new ErrorResponse(HttpStatus.BAD_REQUEST, {
         message: 'you need upload file',
         code: -1,
       });
     }
-    return this.photoService.upload(user, image);
+    return this.photoService.upload(user, image, photoRequestDto);
   }
 
   @ApiDocs.getMany('포토 리스트 조회')

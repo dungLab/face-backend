@@ -19,6 +19,16 @@ export const ApiDocs: SwaggerMethodDoc<PhotoController> = {
         schema: {
           type: 'object',
           properties: {
+            span: {
+              type: 'number',
+              description: 'hour 기준',
+            },
+            description: { type: 'string', description: '포토 설명' },
+            hashTag: {
+              type: 'string',
+              nullable: true,
+              description: '해시태그 (,)로 구분하여 요청',
+            },
             image: {
               type: 'string',
               format: 'binary',
@@ -28,7 +38,7 @@ export const ApiDocs: SwaggerMethodDoc<PhotoController> = {
       }),
       ApiOperation({
         summary: summary,
-        description: '로그인한 유저가 포토 하나 업로드',
+        description: '로그인한 유저가 포토 하나 생성',
       }),
       ApiResponse({
         status: 201,

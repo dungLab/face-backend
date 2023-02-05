@@ -7,9 +7,28 @@ export class PhotoRepository extends Repository<PhotoEntity> {
   constructor(private readonly dataSource: DataSource) {
     super(PhotoEntity, dataSource.createEntityManager());
   }
+  private _getBaseQueryBuilder() {
+    return this.createQueryBuilder('photo');
+  }
+
+  async insertOne(value: Partial<PhotoEntity>) {
+    return await this._getBaseQueryBuilder()
+      .insert()
+      .into(PhotoEntity)
+      .values(value)
+      .execute();
+  }
+
+  async insertBatch(values: Partial<PhotoEntity>[]) {
+    return await this._getBaseQueryBuilder()
+      .insert()
+      .into(PhotoEntity)
+      .values(values)
+      .execute();
+  }
 
   async findManyCursorByUserId(userId: number) {
-    return await this.createQueryBuilder('photo')
+    return await this._getBaseQueryBuilder()
       .leftJoinAndSelect('photo.user', 'user')
       .where('photo.userId = :userId', {
         userId,

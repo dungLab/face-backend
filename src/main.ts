@@ -1,6 +1,6 @@
 import { AppModule } from '@/app.module';
 import { AllExceptionFilter } from '@/common/all-exception.filter';
-import { ResponseFormatInterceptor } from '@/common/response-format.interceptor';
+import { ResponseFormatInterceptor } from '@/common/interceptors/response-format.interceptor';
 import { setupSwagger } from '@/docs';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
