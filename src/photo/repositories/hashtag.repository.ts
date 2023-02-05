@@ -8,7 +8,7 @@ export class HashTagReository extends Repository<HashTagEntity> {
     super(HashTagEntity, dataSource.createEntityManager());
   }
 
-  private _getBaseQueryBuilder(queryRunner: QueryRunner) {
+  private _getBaseQueryBuilder(queryRunner?: QueryRunner) {
     return queryRunner
       ? this.createQueryBuilder('hashtag', queryRunner)
       : this.createQueryBuilder('hashtag');

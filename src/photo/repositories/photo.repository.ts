@@ -1,14 +1,16 @@
 import { PhotoEntity } from '@/photo/entities/photo.entity';
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, QueryRunner, Repository } from 'typeorm';
 
 @Injectable()
 export class PhotoRepository extends Repository<PhotoEntity> {
   constructor(private readonly dataSource: DataSource) {
     super(PhotoEntity, dataSource.createEntityManager());
   }
-  private _getBaseQueryBuilder() {
-    return this.createQueryBuilder('photo');
+  private _getBaseQueryBuilder(queryRunner?: QueryRunner) {
+    return queryRunner
+      ? this.createQueryBuilder('photo', queryRunner)
+      : this.createQueryBuilder('photo');
   }
 
   async insertOne(value: Partial<PhotoEntity>) {
