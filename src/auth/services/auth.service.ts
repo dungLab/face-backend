@@ -14,6 +14,7 @@ import { generateRandomNickName } from '@/user/utils';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { Builder } from 'builder-pattern';
 
 @Injectable()
 export class AuthService {
@@ -45,10 +46,10 @@ export class AuthService {
       });
     }
 
-    return {
-      accessToken: this._generateAccessToken({ ...user }),
-      refreshToken: this._generateRefreshToken({ ...user }),
-    };
+    return Builder(LoginResponseDto)
+      .accessToken(this._generateAccessToken({ ...user }))
+      .refreshToken(this._generateRefreshToken({ ...user }))
+      .build();
   }
 
   refreshToken(user: UserEntity) {

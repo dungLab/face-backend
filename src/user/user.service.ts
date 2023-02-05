@@ -4,6 +4,7 @@ import { UserReseponseDto } from '@/user/dtos/response/user-response.dto';
 import { UserEntity } from '@/user/entities/user.entity';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { Injectable } from '@nestjs/common';
+import { Builder } from 'builder-pattern';
 
 @Injectable()
 export class UserService {
@@ -24,11 +25,11 @@ export class UserService {
   }
 
   getUserInfo(user: UserEntity): UserReseponseDto {
-    return {
-      id: user.id,
-      email: user.email,
-      nickName: user.nickName,
-      createdAt: getDateFormat(user.createdAt),
-    };
+    return Builder(UserReseponseDto)
+      .id(user.id)
+      .email(user.email)
+      .nickName(user.nickName)
+      .createdAt(getDateFormat(user.createdAt))
+      .build();
   }
 }

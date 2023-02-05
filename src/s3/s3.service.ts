@@ -49,7 +49,7 @@ export class S3Service {
     }
   }
 
-  private _generateFileName(fileName: string) {
+  private _generateFileName(fileName: string): string {
     const fileExt = `.${fileName.split('.').pop()}`;
     return getCurrentDateFormat('yyyyMMdd')
       .concat('-')

@@ -8,6 +8,7 @@ import { OAuthServiceType } from '@/auth/constants';
 import { AbstractOAuthService } from '@/auth/services/abstract-oauth-service';
 import { ErrorResponse } from '@/common/error-response.exception';
 import { KakaoUserInfoDto } from '@/auth/dtos/kakao-user-info.dto';
+import { Builder } from 'builder-pattern';
 
 @Injectable()
 export class KakaoOAuthService extends AbstractOAuthService {
@@ -115,8 +116,8 @@ export class KakaoOAuthService extends AbstractOAuthService {
       });
     }
 
-    return {
-      email: userInfo.kakao_account.email,
-    };
+    return Builder(KakaoUserInfoDto)
+      .email(userInfo.kakao_account.email)
+      .build();
   }
 }

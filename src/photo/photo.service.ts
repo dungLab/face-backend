@@ -11,7 +11,10 @@ import { DataSource, QueryRunner } from 'typeorm';
 import { HashTagReository } from '@/photo/repositories/hashtag.repository';
 import { PhotoHashTagRepository } from '@/photo/repositories/photo-hashtag.repository';
 import { HashTagEntity } from '@/photo/entities/hashtag.entity';
+import { Builder } from 'builder-pattern';
 import * as _ from 'lodash';
+import { PhotoEntity } from '@/photo/entities/photo.entity';
+import { PhotoHashTagEntity } from '@/photo/entities/photo-hashtag.entity';
 
 @Injectable()
 export class PhotoService {
@@ -48,12 +51,13 @@ export class PhotoService {
     await queryRunner.startTransaction();
 
     try {
-      const photoEntity = this.photoRepository.create({
-        url: uploadedFileUrl,
-        userId: user.id,
-        span,
-        description,
-      });
+      const photoEntity = Builder(PhotoEntity)
+        .url(uploadedFileUrl)
+        .userId(user.id)
+        .span(span)
+        .description(description)
+        .build();
+
       const savedPhotoEntity = await queryRunner.manager.save(photoEntity);
 
       if (hashTag) {
@@ -82,9 +86,7 @@ export class PhotoService {
       await this.hashTagRepository.findManyByNames(hashTagArr, queryRunner);
 
     const newHashTagEntities = hashTagArr.map((_d): HashTagEntity => {
-      return this.hashTagRepository.create({
-        name: _d,
-      });
+      return Builder(HashTagEntity).name(_d).build();
     });
 
     const hasSaveTagEntities = newHashTagEntities.filter((n) => {
@@ -101,10 +103,10 @@ export class PhotoService {
       ...alreadyHashTagIds,
       ...savedHashTagIds,
     ].map((hashTagId) => {
-      return this.photoHashTagRepository.create({
-        photoId,
-        hashTagId,
-      });
+      return Builder(PhotoHashTagEntity)
+        .photoId(photoId)
+        .hashTagId(hashTagId)
+        .build();
     });
 
     // photo-hashtag
@@ -120,15 +122,15 @@ export class PhotoService {
       await this.photoRepository.findManyCursorByUserId(userId);
 
     return foundPhotoEntities.map((_d) => {
-      return {
-        id: _d.id,
-        url: _d.url,
-        description: _d.description,
-        span: _d.span,
-        userNickName: _d.user.nickName,
-        createdAt: getDateFormat(_d.createdAt),
-        hashTags: _d.photoHashTags.map((__d) => __d.hashTag.name),
-      };
+      return Builder(PhotoResponseDto)
+        .id(_d.id)
+        .url(_d.url)
+        .description(_d.description)
+        .span(_d.span)
+        .userNickName(_d.user.nickName)
+        .createdAt(getDateFormat(_d.createdAt))
+        .hashTags(_d.photoHashTags.map((__d) => __d.hashTag.name))
+        .build();
     });
   }
 
@@ -142,14 +144,14 @@ export class PhotoService {
       });
     }
 
-    return {
-      id: foundPhotoEntity.id,
-      url: foundPhotoEntity.url,
-      description: foundPhotoEntity.description,
-      span: foundPhotoEntity.span,
-      userNickName: foundPhotoEntity.user.nickName,
-      createdAt: getDateFormat(foundPhotoEntity.createdAt),
-      hashTags: foundPhotoEntity.photoHashTags.map((_d) => _d.hashTag.name),
-    };
+    return Builder(PhotoResponseDto)
+      .id(foundPhotoEntity.id)
+      .url(foundPhotoEntity.url)
+      .description(foundPhotoEntity.description)
+      .span(foundPhotoEntity.span)
+      .userNickName(foundPhotoEntity.user.nickName)
+      .createdAt(getDateFormat(foundPhotoEntity.createdAt))
+      .hashTags(foundPhotoEntity.photoHashTags.map((_d) => _d.hashTag.name))
+      .build();
   }
 }
