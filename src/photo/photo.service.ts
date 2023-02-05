@@ -7,7 +7,7 @@ import { UserEntity } from '@/user/entities/user.entity';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ErrorResponse } from '@/common/error-response.exception';
 import { PhotoRequestDto } from '@/photo/dtos/request/photo-request.dto';
-import { DataSource } from 'typeorm';
+import { DataSource, QueryRunner } from 'typeorm';
 import { HashTagReository } from '@/photo/repositories/hashtag.repository';
 import { PhotoHashTagRepository } from '@/photo/repositories/photo-hashtag.repository';
 import { HashTagEntity } from '@/photo/entities/hashtag.entity';
@@ -42,25 +42,44 @@ export class PhotoService {
 
     const { span, hashTag, description } = photoRequestDto;
 
-    const savedPhotoEntity = await this.photoRepository.save({
-      url: uploadedFileUrl,
-      userId: user.id,
-      span,
-      description,
-    });
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
 
-    if (hashTag) {
-      await this.saveHashTags(hashTag, savedPhotoEntity.id);
+    await queryRunner.startTransaction();
+
+    try {
+      const photoEntity = this.photoRepository.create({
+        url: uploadedFileUrl,
+        userId: user.id,
+        span,
+        description,
+      });
+      const savedPhotoEntity = await queryRunner.manager.save(photoEntity);
+
+      if (hashTag) {
+        // hash tag 처리
+        await this.saveHashTags(hashTag, savedPhotoEntity.id, queryRunner);
+      }
+
+      await queryRunner.commitTransaction();
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
     }
 
     return true;
   }
 
-  async saveHashTags(hashTag: string, photoId: number) {
+  async saveHashTags(
+    hashTag: string,
+    photoId: number,
+    queryRunner: QueryRunner,
+  ) {
     const hashTagArr = hashTag.split(',').map((_d) => _d.trim());
 
     const alreadyExistedHashTagEntities =
-      await this.hashTagRepository.findManyByNames(hashTagArr);
+      await this.hashTagRepository.findManyByNames(hashTagArr, queryRunner);
 
     const newHashTagEntities = hashTagArr.map((_d): HashTagEntity => {
       return this.hashTagRepository.create({
@@ -73,7 +92,7 @@ export class PhotoService {
     });
 
     // hashtag
-    const savedHashTags = await this.hashTagRepository.save(hasSaveTagEntities);
+    const savedHashTags = await queryRunner.manager.save(hasSaveTagEntities);
 
     const alreadyHashTagIds = alreadyExistedHashTagEntities.map((_d) => _d.id);
     const savedHashTagIds = savedHashTags.map((_d) => _d.id);
@@ -89,7 +108,7 @@ export class PhotoService {
     });
 
     // photo-hashtag
-    await this.photoHashTagRepository.save(hasSavePhotoHashTagEntities);
+    await queryRunner.manager.save(hasSavePhotoHashTagEntities);
 
     return true;
   }

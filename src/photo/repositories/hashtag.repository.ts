@@ -1,6 +1,6 @@
 import { HashTagEntity } from '@/photo/entities/hashtag.entity';
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, QueryRunner, Repository } from 'typeorm';
 
 @Injectable()
 export class HashTagReository extends Repository<HashTagEntity> {
@@ -8,12 +8,14 @@ export class HashTagReository extends Repository<HashTagEntity> {
     super(HashTagEntity, dataSource.createEntityManager());
   }
 
-  private _getBaseQueryBuilder() {
-    return this.createQueryBuilder('hashtag');
+  private _getBaseQueryBuilder(queryRunner: QueryRunner) {
+    return queryRunner
+      ? this.createQueryBuilder('hashtag', queryRunner)
+      : this.createQueryBuilder('hashtag');
   }
 
-  async findManyByNames(names: string[]) {
-    return this._getBaseQueryBuilder()
+  async findManyByNames(names: string[], queryRunner: QueryRunner) {
+    return this._getBaseQueryBuilder(queryRunner)
       .where('hashtag.name IN (:names)', {
         names,
       })
