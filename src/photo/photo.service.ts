@@ -26,7 +26,7 @@ export class PhotoService {
     private readonly photoHashTagRepository: PhotoHashTagRepository,
   ) {}
 
-  async upload(
+  async create(
     user: UserEntity,
     image: Express.Multer.File,
     photoRequestDto: PhotoRequestDto,
@@ -58,7 +58,7 @@ export class PhotoService {
 
       if (hashTag) {
         // hash tag 처리
-        await this.saveHashTags(hashTag, savedPhotoEntity.id, queryRunner);
+        await this.createHashTags(hashTag, savedPhotoEntity.id, queryRunner);
       }
 
       await queryRunner.commitTransaction();
@@ -71,7 +71,7 @@ export class PhotoService {
     return true;
   }
 
-  async saveHashTags(
+  async createHashTags(
     hashTag: string,
     photoId: number,
     queryRunner: QueryRunner,

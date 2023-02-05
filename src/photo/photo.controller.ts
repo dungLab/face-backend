@@ -26,7 +26,7 @@ import { imageFileFilter } from '@/common/interceptors/image-file.interceptor';
 export class PhotoController {
   constructor(private readonly photoService: PhotoService) {}
 
-  @ApiDocs.upload('포토 생성')
+  @ApiDocs.create('포토 생성')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor('image', {
@@ -34,7 +34,7 @@ export class PhotoController {
     }),
   )
   @Post()
-  upload(
+  create(
     @User() user: UserEntity,
     @UploadedFile() image: Express.Multer.File,
     @Body() photoRequestDto: PhotoRequestDto,
@@ -45,7 +45,7 @@ export class PhotoController {
         code: -1,
       });
     }
-    return this.photoService.upload(user, image, photoRequestDto);
+    return this.photoService.create(user, image, photoRequestDto);
   }
 
   @ApiDocs.getMany('포토 리스트 조회')

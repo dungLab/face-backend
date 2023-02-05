@@ -11,7 +11,7 @@ import {
 } from '@nestjs/swagger';
 
 export const ApiDocs: SwaggerMethodDoc<PhotoController> = {
-  upload(summary) {
+  create(summary) {
     return applyDecorators(
       ApiBearerAuth('jwt'),
       ApiConsumes('multipart/form-data'),
