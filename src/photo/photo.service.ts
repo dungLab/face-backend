@@ -43,7 +43,7 @@ export class PhotoService {
         : FaceFolderType.DEVELOPMENT,
     );
 
-    const { span, hashTag, description } = photoRequestDto;
+    const { span, hashTags, description } = photoRequestDto;
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -60,9 +60,9 @@ export class PhotoService {
 
       const savedPhotoEntity = await queryRunner.manager.save(photoEntity);
 
-      if (hashTag) {
+      if (hashTags) {
         // hash tag 처리
-        await this.createHashTags(hashTag, savedPhotoEntity.id, queryRunner);
+        await this.createHashTags(hashTags, savedPhotoEntity.id, queryRunner);
       }
 
       await queryRunner.commitTransaction();
@@ -76,16 +76,14 @@ export class PhotoService {
   }
 
   async createHashTags(
-    hashTag: string,
+    hashTags: string[],
     photoId: number,
     queryRunner: QueryRunner,
   ) {
-    const hashTagArr = hashTag.split(',').map((_d) => _d.trim());
-
     const alreadyExistedHashTagEntities =
-      await this.hashTagRepository.findManyByNames(hashTagArr, queryRunner);
+      await this.hashTagRepository.findManyByNames(hashTags, queryRunner);
 
-    const newHashTagEntities = hashTagArr.map((_d): HashTagEntity => {
+    const newHashTagEntities = hashTags.map((_d): HashTagEntity => {
       return Builder(HashTagEntity).name(_d).build();
     });
 

@@ -25,9 +25,12 @@ export const ApiDocs: SwaggerMethodDoc<PhotoController> = {
             },
             description: { type: 'string', description: '포토 설명' },
             hashTag: {
-              type: 'string',
+              type: 'array',
+              items: {
+                type: 'string',
+              },
               nullable: true,
-              description: '해시태그 (,)로 구분하여 요청',
+              description: '해시태그들 -> form-data에 ,로 구분하여 요청',
             },
             image: {
               type: 'string',

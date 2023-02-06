@@ -1,5 +1,5 @@
-import { Type } from 'class-transformer';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class PhotoRequestDto {
   @Type(() => Number)
@@ -9,7 +9,13 @@ export class PhotoRequestDto {
   @IsString()
   description: string;
 
+  @Transform(({ value }) => {
+    if (typeof value !== 'string') {
+      return value;
+    }
+    return value.split(',').map((_d) => String(_d).trim());
+  })
+  @IsArray()
   @IsOptional()
-  @IsString()
-  hashTag?: string;
+  hashTags?: string[];
 }
