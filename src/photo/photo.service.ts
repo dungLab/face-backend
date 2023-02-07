@@ -1,8 +1,6 @@
 import { PhotoResponseDto } from '@/photo/dtos/response/photo-response.dto';
 import { PhotoRepository } from '@/photo/repositories/photo.repository';
 import { getDateFormat } from '@/common/utils/date.util';
-import { FaceFolderType, S3BucketType } from '@/s3/constants';
-import { S3Service } from '@/s3/s3.service';
 import { UserEntity } from '@/user/entities/user.entity';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ErrorResponse } from '@/common/error-response.exception';
@@ -15,35 +13,36 @@ import { Builder } from 'builder-pattern';
 import * as _ from 'lodash';
 import { PhotoEntity } from '@/photo/entities/photo.entity';
 import { PhotoHashTagEntity } from '@/photo/entities/photo-hashtag.entity';
+import { FileRepository } from '@/file/repositories/file.repository';
 
 @Injectable()
 export class PhotoService {
   constructor(
     //services
-    private readonly s3Service: S3Service,
     private readonly dataSource: DataSource,
 
     //repositories
     private readonly photoRepository: PhotoRepository,
     private readonly hashTagRepository: HashTagReository,
     private readonly photoHashTagRepository: PhotoHashTagRepository,
+    private readonly fileRepository: FileRepository,
   ) {}
 
-  async create(
-    user: UserEntity,
-    image: Express.Multer.File,
-    photoRequestDto: PhotoRequestDto,
-  ) {
-    const uploadedFileUrl = await this.s3Service.upload(
-      image,
-      'ap-northeast-2',
-      S3BucketType.FACE,
-      process.env.NODE_ENV === 'production'
-        ? FaceFolderType.PRODUCTION
-        : FaceFolderType.DEVELOPMENT,
-    );
+  async create(user: UserEntity, photoRequestDto: PhotoRequestDto) {
+    const { fileId, span, hashTags, description } = photoRequestDto;
 
-    const { span, hashTags, description } = photoRequestDto;
+    const foundFileEntity = await this.fileRepository.findOne({
+      where: {
+        id: fileId,
+      },
+    });
+
+    if (!foundFileEntity) {
+      throw new ErrorResponse(HttpStatus.BAD_REQUEST, {
+        message: 'there is no file',
+        code: -1,
+      });
+    }
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -52,7 +51,7 @@ export class PhotoService {
 
     try {
       const photoEntity = Builder(PhotoEntity)
-        .url(uploadedFileUrl)
+        .fileId(fileId)
         .userId(user.id)
         .span(span)
         .description(description)
@@ -123,7 +122,7 @@ export class PhotoService {
     return foundPhotoEntities.map((_d) => {
       return Builder(PhotoResponseDto)
         .id(_d.id)
-        .url(_d.url)
+        .url(_d.file.url)
         .description(_d.description)
         .span(_d.span)
         .userNickName(_d.user.nickName)
@@ -145,7 +144,7 @@ export class PhotoService {
 
     return Builder(PhotoResponseDto)
       .id(foundPhotoEntity.id)
-      .url(foundPhotoEntity.url)
+      .url(foundPhotoEntity.file.url)
       .description(foundPhotoEntity.description)
       .span(foundPhotoEntity.span)
       .userNickName(foundPhotoEntity.user.nickName)

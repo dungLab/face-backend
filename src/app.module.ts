@@ -10,6 +10,7 @@ import { UserModule } from '@/user/user.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { FileModule } from './file/file.module';
 @Module({
   imports: [
     // config module should load first
@@ -31,6 +32,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     PhotoModule,
 
     S3Module,
+
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

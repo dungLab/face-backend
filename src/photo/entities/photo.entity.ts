@@ -1,3 +1,4 @@
+import { FileEntity } from '@/file/entities/file.entity';
 import { PhotoHashTagEntity } from '@/photo/entities/photo-hashtag.entity';
 import { UserEntity } from '@/user/entities/user.entity';
 import {
@@ -8,6 +9,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -17,9 +19,6 @@ export class PhotoEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;
 
-  @Column({ name: 'url', type: 'varchar', comment: 'obj url' })
-  url: string;
-
   @Column({
     name: 'user_id',
     type: 'int',
@@ -27,6 +26,14 @@ export class PhotoEntity {
     comment: '유저 아이디',
   })
   userId: number;
+
+  @Column({
+    name: 'file_id',
+    type: 'int',
+    unsigned: true,
+    comment: '파일 아이디',
+  })
+  fileId: number;
 
   @Column({ name: 'description', type: 'varchar', comment: 'description' })
   description: string;
@@ -58,4 +65,12 @@ export class PhotoEntity {
 
   @OneToMany(() => PhotoHashTagEntity, (photoHashTag) => photoHashTag.photo)
   photoHashTags: PhotoHashTagEntity[];
+
+  @OneToOne(() => FileEntity, (file) => file.photo)
+  @JoinColumn({
+    name: 'file_id',
+    referencedColumnName: 'id',
+    foreignKeyConstraintName: 'fk_file_id',
+  })
+  file: FileEntity;
 }

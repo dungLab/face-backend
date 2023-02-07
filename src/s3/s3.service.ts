@@ -1,6 +1,6 @@
 import { ErrorResponse } from '@/common/error-response.exception';
 import { getCurrentDateFormat } from '@/common/utils/date.util';
-import { FaceFolderType, S3BucketType } from '@/s3/constants';
+import { S3BucketType } from '@/s3/constants';
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as AWS from 'aws-sdk';
@@ -21,7 +21,7 @@ export class S3Service {
     file: Express.Multer.File,
     region: AWSRegion,
     bucket: S3BucketType,
-    folder: FaceFolderType,
+    folder: string,
   ) {
     const s3 = new AWS.S3({
       accessKeyId: this.accessKey,

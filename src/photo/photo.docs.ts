@@ -5,39 +5,17 @@ import { applyDecorators } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
-  ApiConsumes,
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
+import { PhotoRequestDto } from '@/photo/dtos/request/photo-request.dto';
 
 export const ApiDocs: SwaggerMethodDoc<PhotoController> = {
   create(summary) {
     return applyDecorators(
       ApiBearerAuth('jwt'),
-      ApiConsumes('multipart/form-data'),
       ApiBody({
-        schema: {
-          type: 'object',
-          properties: {
-            span: {
-              type: 'number',
-              description: 'hour 기준',
-            },
-            description: { type: 'string', description: '포토 설명' },
-            hashTag: {
-              type: 'array',
-              items: {
-                type: 'string',
-              },
-              nullable: true,
-              description: '해시태그들 -> form-data에 ,로 구분하여 요청',
-            },
-            image: {
-              type: 'string',
-              format: 'binary',
-            },
-          },
-        },
+        type: PhotoRequestDto,
       }),
       ApiOperation({
         summary: summary,
