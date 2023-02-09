@@ -19,19 +19,17 @@ export class FileService {
   ) {}
 
   async uploadImage(
-    type: FolderType,
+    folderType: FolderType,
     image: Express.Multer.File,
   ): Promise<FileReponseDto> {
-    switch (type) {
+    switch (folderType) {
       case FolderType.PHOTO: {
         // photo image upload
         const uploadedFileUrl = await this.s3Service.upload(
           image,
           'ap-northeast-2',
           S3BucketType.FACE,
-          process.env.NODE_ENV === 'production'
-            ? `${type}/production`
-            : `${type}/development`,
+          folderType,
         );
 
         const savedFileEntity = await this.fileRepository.save({

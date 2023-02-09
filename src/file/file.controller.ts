@@ -30,7 +30,7 @@ export class FileController {
   )
   @Post('image/:type')
   uploadImage(
-    @Param('type') type: FolderType,
+    @Param('type') folderType: FolderType,
     @UploadedFile() image: Express.Multer.File,
   ) {
     if (!image) {
@@ -40,6 +40,6 @@ export class FileController {
       });
     }
 
-    return this.fileService.uploadImage(type, image);
+    return this.fileService.uploadImage(folderType, image);
   }
 }

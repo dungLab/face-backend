@@ -5,6 +5,7 @@ import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as AWS from 'aws-sdk';
 import { AWSRegion } from 'aws-sdk/clients/cur';
+import { FolderType } from 'aws-sdk/clients/quicksight';
 import * as crypto from 'crypto';
 
 @Injectable()
@@ -21,7 +22,7 @@ export class S3Service {
     file: Express.Multer.File,
     region: AWSRegion,
     bucket: S3BucketType,
-    folder: string,
+    folderType: FolderType,
   ) {
     const s3 = new AWS.S3({
       accessKeyId: this.accessKey,
@@ -30,7 +31,9 @@ export class S3Service {
     });
     const param = {
       Bucket: bucket,
-      Key: `${folder}/${this._generateFileName(file.originalname)}`,
+      Key: `${this._generateFolderPath(folderType)}/${this._generateFileName(
+        file.originalname,
+      )}`,
       Body: file.buffer,
       ACL: 'public-read',
       ContentType: file.mimetype,
@@ -55,5 +58,11 @@ export class S3Service {
       .concat('-')
       .concat(crypto.randomBytes(20).toString('hex'))
       .concat(fileExt);
+  }
+
+  private _generateFolderPath(folderType: FolderType) {
+    return process.env.NODE_ENV === 'production'
+      ? `${folderType}/production`
+      : `${folderType}/development`;
   }
 }
