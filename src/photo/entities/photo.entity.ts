@@ -1,3 +1,4 @@
+import { EvaluationEntity } from '@/evaluation/entities/evaluation.entity';
 import { FileEntity } from '@/file/entities/file.entity';
 import { PhotoHashTagEntity } from '@/photo/entities/photo-hashtag.entity';
 import { UserEntity } from '@/user/entities/user.entity';
@@ -66,6 +67,7 @@ export class PhotoEntity {
   @OneToMany(() => PhotoHashTagEntity, (photoHashTag) => photoHashTag.photo)
   photoHashTags: PhotoHashTagEntity[];
 
+  //TODO: rename unique index name (REL_randomstr -> uk_file_id)
   @OneToOne(() => FileEntity, (file) => file.photo)
   @JoinColumn({
     name: 'file_id',
@@ -73,4 +75,7 @@ export class PhotoEntity {
     foreignKeyConstraintName: 'fk_file_id',
   })
   file: FileEntity;
+
+  @OneToMany(() => EvaluationEntity, (evaluation) => evaluation.photo)
+  evaluations: EvaluationEntity[];
 }

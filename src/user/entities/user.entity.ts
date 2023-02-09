@@ -1,4 +1,5 @@
 import { OAuthServiceType } from '@/auth/constants';
+import { EvaluationEntity } from '@/evaluation/entities/evaluation.entity';
 import { PhotoEntity } from '@/photo/entities/photo.entity';
 import {
   Column,
@@ -57,4 +58,7 @@ export class UserEntity {
 
   @OneToMany(() => PhotoEntity, (imageEntity) => imageEntity.user)
   photos: PhotoEntity[];
+
+  @OneToMany(() => EvaluationEntity, (evaluation) => evaluation.user)
+  evaluations: EvaluationEntity[];
 }

@@ -9,7 +9,7 @@ export const ormconfig: TypeOrmModuleOptions = {
   // base
   type: 'mysql',
   synchronize: true,
-  retryAttempts: 10,
+  retryAttempts: 0,
   retryDelay: 300,
   logging:
     process.env.NODE_ENV === 'production'

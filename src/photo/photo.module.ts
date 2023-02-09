@@ -18,5 +18,6 @@ import { PhotoService } from './photo.service';
     HashTagReository,
     PhotoHashTagRepository,
   ],
+  exports: [PhotoRepository],
 })
 export class PhotoModule {}
