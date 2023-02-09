@@ -3,7 +3,7 @@ import { ErrorResponse } from '@/common/error-response.exception';
 import { imageFileFilter } from '@/common/interceptors/image-file.interceptor';
 import { ApiDocs } from '@/file/file.docs';
 import { FileService } from '@/file/file.service';
-import { ImageFolderType } from '@/s3/constants';
+import { FolderType } from '@/s3/constants';
 import {
   Controller,
   HttpStatus,
@@ -30,7 +30,7 @@ export class FileController {
   )
   @Post('image/:type')
   uploadImage(
-    @Param('type') type: ImageFolderType,
+    @Param('type') type: FolderType,
     @UploadedFile() image: Express.Multer.File,
   ) {
     if (!image) {

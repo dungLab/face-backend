@@ -9,7 +9,7 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { FileController } from '@/file/file.controller';
-import { ImageFolderType } from '@/s3/constants';
+import { FolderType } from '@/s3/constants';
 import { FileReponseDto } from '@/file/dtos/request/file-response.dto';
 
 export const ApiDocs: SwaggerMethodDoc<FileController> = {
@@ -20,7 +20,7 @@ export const ApiDocs: SwaggerMethodDoc<FileController> = {
       ApiParam({
         name: 'type',
         type: 'string',
-        enum: [ImageFolderType.PHOTO, ImageFolderType.PROFILE],
+        enum: [FolderType.PHOTO, FolderType.PROFILE],
       }),
       ApiBody({
         schema: {
