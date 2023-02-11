@@ -52,7 +52,40 @@ export class PhotoRepository extends Repository<PhotoEntity> {
       .where('photo.id = :id', {
         id,
       })
-      .andWhere('photo.deletedAt is null')
+      .andWhere('photo.deletedAt IS NULL')
+      .getOne();
+  }
+
+  // select id, user_id
+  async findSimpleOneById(id: number) {
+    return await this._getBaseQueryBuilder()
+      .withDeleted()
+      .select(['photo.id', 'photo.userId'])
+      .where('photo.id = :id', {
+        id,
+      })
+      .andWhere('photo.deletedAt IS NULL')
+      .limit(1)
+      .getOne();
+  }
+
+  async findOneForEvaluation(requestUserId: number) {
+    return await this._getBaseQueryBuilder()
+      .withDeleted()
+      .select('photo.id')
+      .leftJoin(
+        'photo.evaluations',
+        'evaluations',
+        'evaluations.userId = :requestUserId',
+        {
+          requestUserId,
+        },
+      )
+      .where('photo.userId <> :requestUserId', { requestUserId })
+      .andWhere('DATE_ADD(photo.createdAt, INTERVAL photo.span HOUR) > NOW()')
+      .andWhere('photo.deletedAt IS NULL')
+      .andWhere('evaluations.id IS NULL')
+      .orderBy('DATE_ADD(photo.createdAt, INTERVAL photo.span HOUR)', 'ASC')
       .getOne();
   }
 }

@@ -1,13 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+} from 'class-validator';
 
 export class PhotoRequestDto {
   @IsNumber()
   @ApiProperty({ description: 'file id' })
   fileId: number;
 
-  @IsNumber()
-  @ApiProperty({ description: '평가 기간(hour 기준)' })
+  @IsPositive()
+  @ApiProperty({ description: '평가 기간(hour 기준) (1이상 양수)' })
   span: number;
 
   @IsString()
