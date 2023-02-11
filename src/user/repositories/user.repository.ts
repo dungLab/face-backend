@@ -11,22 +11,24 @@ export class UserRepository extends Repository<UserEntity> {
 
   async findByEmail(email: string) {
     return await this.createQueryBuilder('user')
+      .withDeleted()
       .where('user.email = :email', {
         email,
       })
-      .andWhere('user.deletedAt is null')
+      .andWhere('user.deletedAt IS NULL')
       .getOne();
   }
 
   async findByEmailAndType(email: string, type: OAuthServiceType) {
     return await this.createQueryBuilder('user')
+      .withDeleted()
       .where('user.email = :email', {
         email,
       })
       .andWhere('user.type = :type', {
         type,
       })
-      .andWhere('user.deletedAt is null')
+      .andWhere('user.deletedAt IS NULL')
       .getOne();
   }
 }

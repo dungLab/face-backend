@@ -16,10 +16,11 @@ export class HashTagReository extends Repository<HashTagEntity> {
 
   async findManyByNames(names: string[], queryRunner: QueryRunner) {
     return this._getBaseQueryBuilder(queryRunner)
+      .withDeleted()
       .where('hashtag.name IN (:names)', {
         names,
       })
-      .andWhere('hashtag.deletedAt is null')
+      .andWhere('hashtag.deletedAt IS NULL')
       .getMany();
   }
 }

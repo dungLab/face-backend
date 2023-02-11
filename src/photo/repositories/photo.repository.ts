@@ -39,7 +39,7 @@ export class PhotoRepository extends Repository<PhotoEntity> {
       .where('photo.userId = :userId', {
         userId,
       })
-      .andWhere('photo.deletedAt is null')
+      .andWhere('photo.deletedAt IS NULL')
       .orderBy('photo.id', 'DESC')
       .getMany();
   }

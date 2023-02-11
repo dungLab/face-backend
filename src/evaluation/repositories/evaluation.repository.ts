@@ -16,8 +16,8 @@ export class EvaluationRepository extends Repository<EvaluationEntity> {
 
   async findOneByUserIdAndPhotoId(userId: number, photoId: number) {
     return await this._getBaseQueryBuilder()
-      .select('evaluation.id')
       .withDeleted()
+      .select('evaluation.id')
       .where('evaluation.userId = :userId', {
         userId,
       })
