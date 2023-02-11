@@ -5,6 +5,7 @@ import { EvaluationRequestDto } from '@/evaluation/dtos/request/evaluation-reque
 import { EvaluationResponseDto } from '@/evaluation/dtos/response/evaluation-response.dto';
 import { EvaluationEntity } from '@/evaluation/entities/evaluation.entity';
 import { EvaluationRepository } from '@/evaluation/repositories/evaluation.repository';
+import { LogEvaluationRepository } from '@/log/repositories/log-evaluation.repository';
 import { PhotoRepository } from '@/photo/repositories/photo.repository';
 import { UserEntity } from '@/user/entities/user.entity';
 import { HttpStatus, Injectable } from '@nestjs/common';
@@ -16,19 +17,18 @@ export class EvaluationService {
     //repositories
     private readonly evaluationRepository: EvaluationRepository,
     private readonly photoRepository: PhotoRepository,
+    private readonly logEvaluationRepository: LogEvaluationRepository,
   ) {}
 
   async getOne(
     user: UserEntity,
     targetType: EvaluationTargetType,
   ): Promise<EvaluationResponseDto | null> {
-    const userId = user.id;
-
     switch (targetType) {
       case EvaluationTargetType.ALL: {
         // 1. select one 평가할 photoEntity
         const foundSimplePhotoEntity =
-          await this.photoRepository.findOneForEvaluation(userId);
+          await this.photoRepository.findOneForEvaluation(user.id);
 
         if (!foundSimplePhotoEntity) {
           return null;
@@ -40,6 +40,13 @@ export class EvaluationService {
         const foundDetailPhotoEntity = await this.photoRepository.findOneById(
           id,
         );
+
+        // log
+        this.logEvaluationRepository.save({
+          userId: user.id,
+          photoId: id,
+          isGet: true,
+        });
 
         return Builder(EvaluationResponseDto)
           .id(foundDetailPhotoEntity.id)
@@ -108,6 +115,14 @@ export class EvaluationService {
       .build();
 
     await this.evaluationRepository.save(evaluationEntity);
+
+    // log
+    this.logEvaluationRepository.save({
+      userId,
+      photoId,
+      isGet: false,
+      isGood: evaluationRequestDto.isGood,
+    });
 
     return true;
   }

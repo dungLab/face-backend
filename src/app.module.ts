@@ -12,6 +12,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileModule } from './file/file.module';
 import { EvaluationModule } from './evaluation/evaluation.module';
+import { LogModule } from './log/log.module';
 @Module({
   imports: [
     // config module should load first
@@ -37,6 +38,8 @@ import { EvaluationModule } from './evaluation/evaluation.module';
     FileModule,
 
     EvaluationModule,
+
+    LogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

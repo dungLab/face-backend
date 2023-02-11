@@ -20,7 +20,7 @@ export class EvaluationEntity {
     name: 'user_id',
     type: 'int',
     unsigned: true,
-    comment: '유저 아이디',
+    comment: '평가한 유저 아이디',
   })
   userId: number;
 
