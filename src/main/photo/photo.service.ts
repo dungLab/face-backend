@@ -85,9 +85,11 @@ export class PhotoService {
     const alreadyExistedHashTagEntities =
       await this.hashTagRepository.findManyByNames(hashTags, queryRunner);
 
-    const newHashTagEntities = hashTags.map((_d): HashTagEntity => {
-      return Builder(HashTagEntity).name(_d).build();
-    });
+    const newHashTagEntities = [...new Set(hashTags)].map(
+      (_d): HashTagEntity => {
+        return Builder(HashTagEntity).name(_d).build();
+      },
+    );
 
     const hasSaveTagEntities = newHashTagEntities.filter((n) => {
       return !alreadyExistedHashTagEntities.find((a) => a.name === n.name);
