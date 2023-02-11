@@ -1,5 +1,5 @@
 import { AppController } from '@/app.controller';
-import { SwaggerMethodDoc } from '@/docs/types';
+import { SwaggerMethodDoc } from '@/common/docs/types';
 import { applyDecorators } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 

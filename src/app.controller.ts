@@ -1,8 +1,8 @@
 import { ApiDocs } from '@/app.docs';
 import { AppService } from '@/app.service';
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
-import { User } from '@/auth/user.decorator';
-import { UserEntity } from '@/user/entities/user.entity';
+import { JwtAuthGuard } from '@/main/auth/jwt-auth.guard';
+import { User } from '@/main/auth/user.decorator';
+import { UserEntity } from '@/main/user/entities/user.entity';
 import { Controller, Get, UseGuards } from '@nestjs/common';
 
 @Controller()
