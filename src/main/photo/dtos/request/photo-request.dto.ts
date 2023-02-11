@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsPositive,
   IsString,
+  Length,
 } from 'class-validator';
 
 export class PhotoRequestDto {
@@ -24,6 +25,8 @@ export class PhotoRequestDto {
   @IsArray()
   @IsOptional()
   @ArrayMaxSize(5)
+  @IsString({ each: true })
+  @Length(1, 200, { each: true })
   @ApiProperty({ description: '해시태그들' })
   hashTags?: string[];
 }
