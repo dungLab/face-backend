@@ -18,9 +18,9 @@ export class PhotoResponseDto {
   description: string;
 
   @ApiProperty({
-    description: '평가 기간',
+    description: '평가 만료 기간',
   })
-  span: number;
+  expiredAt: string;
 
   @ApiProperty({
     description: '유저 닉네임',

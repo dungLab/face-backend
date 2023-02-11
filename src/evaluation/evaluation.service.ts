@@ -52,7 +52,7 @@ export class EvaluationService {
           .id(foundDetailPhotoEntity.id)
           .url(foundDetailPhotoEntity.file.url)
           .description(foundDetailPhotoEntity.description)
-          .span(foundDetailPhotoEntity.span)
+          .expiredAt(getDateFormat(foundDetailPhotoEntity.expiredAt))
           .userNickName(foundDetailPhotoEntity.user.nickName)
           .createdAt(getDateFormat(foundDetailPhotoEntity.createdAt))
           .hashTags(

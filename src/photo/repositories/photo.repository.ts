@@ -31,6 +31,7 @@ export class PhotoRepository extends Repository<PhotoEntity> {
 
   async findManyCursorByUserId(userId: number) {
     return await this._getBaseQueryBuilder()
+      .withDeleted()
       .leftJoinAndSelect('photo.user', 'user')
       .leftJoinAndSelect('photo.file', 'file')
       .leftJoinAndSelect('photo.photoHashTags', 'photoHashTags')
@@ -45,6 +46,7 @@ export class PhotoRepository extends Repository<PhotoEntity> {
 
   async findOneById(id: number) {
     return await this._getBaseQueryBuilder()
+      .withDeleted()
       .leftJoinAndSelect('photo.user', 'user')
       .leftJoinAndSelect('photo.file', 'file')
       .leftJoinAndSelect('photo.photoHashTags', 'photoHashTags')
@@ -82,10 +84,10 @@ export class PhotoRepository extends Repository<PhotoEntity> {
         },
       )
       .where('photo.userId <> :requestUserId', { requestUserId })
-      .andWhere('DATE_ADD(photo.createdAt, INTERVAL photo.span HOUR) > NOW()')
+      .andWhere('photo.expiredAt > NOW()')
       .andWhere('photo.deletedAt IS NULL')
       .andWhere('evaluations.id IS NULL')
-      .orderBy('DATE_ADD(photo.createdAt, INTERVAL photo.span HOUR)', 'ASC')
+      .orderBy('photo.expiredAt', 'ASC')
       .getOne();
   }
 }

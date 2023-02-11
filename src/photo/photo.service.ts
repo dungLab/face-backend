@@ -50,10 +50,12 @@ export class PhotoService {
     await queryRunner.startTransaction();
 
     try {
+      const expiredAt = Date.now() + span;
+
       const photoEntity = Builder(PhotoEntity)
         .fileId(fileId)
         .userId(user.id)
-        .span(span)
+        .expiredAt(new Date(expiredAt))
         .description(description)
         .build();
 
@@ -124,7 +126,7 @@ export class PhotoService {
         .id(_d.id)
         .url(_d.file.url)
         .description(_d.description)
-        .span(_d.span)
+        .expiredAt(getDateFormat(_d.expiredAt))
         .userNickName(_d.user.nickName)
         .createdAt(getDateFormat(_d.createdAt))
         .hashTags(_d.photoHashTags.map((__d) => __d.hashTag.name))
@@ -146,7 +148,7 @@ export class PhotoService {
       .id(foundPhotoEntity.id)
       .url(foundPhotoEntity.file.url)
       .description(foundPhotoEntity.description)
-      .span(foundPhotoEntity.span)
+      .expiredAt(getDateFormat(foundPhotoEntity.expiredAt))
       .userNickName(foundPhotoEntity.user.nickName)
       .createdAt(getDateFormat(foundPhotoEntity.createdAt))
       .hashTags(foundPhotoEntity.photoHashTags.map((_d) => _d.hashTag.name))

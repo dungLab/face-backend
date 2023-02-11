@@ -40,12 +40,11 @@ export class PhotoEntity {
   description: string;
 
   @Column({
-    name: 'span',
-    type: 'int',
-    unsigned: true,
-    comment: '평가 기간(hour기준)',
+    name: 'expired_at',
+    type: 'datetime',
+    comment: '사진 평가 만료 날짜',
   })
-  span: number;
+  expiredAt: Date;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

@@ -13,7 +13,7 @@ export class PhotoRequestDto {
   fileId: number;
 
   @IsPositive()
-  @ApiProperty({ description: '평가 기간(hour 기준) (1이상 양수)' })
+  @ApiProperty({ description: '평가 기간(ms 기준) (1이상 양수)' })
   span: number;
 
   @IsString()

@@ -21,7 +21,7 @@ import { ApiTags } from '@nestjs/swagger';
 export class EvaluationController {
   constructor(private readonly evaluationService: EvaluationService) {}
 
-  @ApiDocs.getOne('평가할 사진 랜덤으로 하나 조회')
+  @ApiDocs.getOne('평가할 사진 하나 조회')
   @UseGuards(JwtAuthGuard)
   @Get(':targetType')
   getOne(

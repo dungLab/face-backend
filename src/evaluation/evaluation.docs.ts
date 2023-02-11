@@ -23,7 +23,7 @@ export const ApiDocs: SwaggerMethodDoc<EvaluationController> = {
       }),
       ApiOperation({
         summary: summary,
-        description: '평가할 사진 랜덤으로 하나 조회',
+        description: '평가할 사진 만료기간 얼마 남지 않은 사진부터 하나 조회',
       }),
       ApiResponse({
         status: 201,
