@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  ArrayMaxSize,
   IsArray,
   IsNumber,
   IsOptional,
@@ -22,6 +23,7 @@ export class PhotoRequestDto {
 
   @IsArray()
   @IsOptional()
+  @ArrayMaxSize(5)
   @ApiProperty({ description: '해시태그들' })
   hashTags?: string[];
 }
