@@ -7,12 +7,13 @@ import { HttpModule } from '@/sub/http/http.module';
 import { PhotoModule } from '@/main/photo/photo.module';
 import { S3Module } from '@/sub/s3/s3.module';
 import { UserModule } from '@/main/user/user.module';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileModule } from './sub/file/file.module';
 import { EvaluationModule } from './main/evaluation/evaluation.module';
 import { LogModule } from './sub/log/log.module';
+import { LoggerMiddleware } from '@/common/middlewares/logger.middleware';
 @Module({
   imports: [
     // config module should load first
@@ -44,4 +45,8 @@ import { LogModule } from './sub/log/log.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
