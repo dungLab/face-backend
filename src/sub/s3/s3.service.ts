@@ -3,7 +3,7 @@ import { getCurrentDateFormat } from '@/common/utils/date.util';
 import { S3BucketType } from '@/sub/s3/constants';
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as AWS from 'aws-sdk';
+import S3 from 'aws-sdk/clients/s3';
 import { AWSRegion } from 'aws-sdk/clients/cur';
 import { FolderType } from 'aws-sdk/clients/quicksight';
 import * as crypto from 'crypto';
@@ -24,7 +24,7 @@ export class S3Service {
     bucket: S3BucketType,
     folderType: FolderType,
   ) {
-    const s3 = new AWS.S3({
+    const s3 = new S3({
       accessKeyId: this.accessKey,
       secretAccessKey: this.secretAccessKey,
       region,
