@@ -1,50 +1,59 @@
 import { ErrorResponse } from '@/common/error-response.exception';
 import { getCurrentDateFormat } from '@/common/utils/date.util';
-import { S3BucketType } from '@/sub/s3/constants';
-import { HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { FolderType, S3BucketType } from '@/sub/s3/constants';
+import {
+  PutObjectCommand,
+  PutObjectCommandInput,
+  S3Client,
+} from '@aws-sdk/client-s3';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import S3 from 'aws-sdk/clients/s3';
-import { AWSRegion } from 'aws-sdk/clients/cur';
-import { FolderType } from 'aws-sdk/clients/quicksight';
 import * as crypto from 'crypto';
 
 @Injectable()
 export class S3Service {
-  private accessKey?: string;
-  private secretAccessKey?: string;
+  private accessKey: string;
+  private secretAccessKey: string;
+  private region: string;
+  private s3Client: S3Client;
 
   constructor(private readonly configService: ConfigService) {
     this.accessKey = this.configService.get('aws.accessKey');
     this.secretAccessKey = this.configService.get('aws.secretAccessKey');
+    this.region = this.configService.get('aws.region');
+
+    this.s3Client = new S3Client({
+      region: this.region,
+      credentials: {
+        accessKeyId: this.accessKey,
+        secretAccessKey: this.secretAccessKey,
+      },
+    });
   }
 
-  async upload(
+  async uploadAndGetUrl(
     file: Express.Multer.File,
-    region: AWSRegion,
     bucket: S3BucketType,
     folderType: FolderType,
   ) {
-    const s3 = new S3({
-      accessKeyId: this.accessKey,
-      secretAccessKey: this.secretAccessKey,
-      region,
-    });
-    const param = {
+    const fileName = `${this._generateFolderPath(
+      folderType,
+    )}/${this._generateFileName(file.originalname)}`;
+
+    const param: PutObjectCommandInput = {
       Bucket: bucket,
-      Key: `${this._generateFolderPath(folderType)}/${this._generateFileName(
-        file.originalname,
-      )}`,
+      Key: fileName,
       Body: file.buffer,
-      ACL: 'public-read',
       ContentType: file.mimetype,
     };
 
-    try {
-      const uploadedFile = await s3.upload(param).promise();
+    const command = new PutObjectCommand(param);
 
-      return uploadedFile.Location;
+    try {
+      await this.s3Client.send(command);
+
+      return this._getUrlFromBucket(bucket, fileName);
     } catch (err) {
-      Logger.error(err);
       throw new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, {
         message: 'upload file to s3 fail',
         code: -1,
@@ -64,5 +73,12 @@ export class S3Service {
     return process.env.NODE_ENV === 'production'
       ? `${folderType}/production`
       : `${folderType}/development`;
+  }
+
+  private _getUrlFromBucket(s3Bucket: S3BucketType, fileName: string) {
+    const regionString = this.region.includes('us-east-1')
+      ? ''
+      : '-' + this.region;
+    return `https://${s3Bucket}.s3${regionString}.amazonaws.com/${fileName}`;
   }
 }

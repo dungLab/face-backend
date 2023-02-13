@@ -25,9 +25,8 @@ export class FileService {
     switch (folderType) {
       case FolderType.PHOTO: {
         // photo image upload
-        const uploadedFileUrl = await this.s3Service.upload(
+        const uploadedFileUrl = await this.s3Service.uploadAndGetUrl(
           image,
-          'ap-northeast-2',
           S3BucketType.FACE,
           folderType,
         );
