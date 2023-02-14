@@ -10,6 +10,7 @@ import { PhotoRepository } from '@/main/photo/repositories/photo.repository';
 import { UserEntity } from '@/main/user/entities/user.entity';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { Builder } from 'builder-pattern';
+import { UserReseponseDto } from '@/main/user/dtos/response/user-response.dto';
 
 @Injectable()
 export class EvaluationService {
@@ -53,7 +54,14 @@ export class EvaluationService {
           .url(foundDetailPhotoEntity.file.url)
           .description(foundDetailPhotoEntity.description)
           .expiredAt(getDateFormat(foundDetailPhotoEntity.expiredAt))
-          .userNickName(foundDetailPhotoEntity.user.nickName)
+          .user(
+            Builder(UserReseponseDto)
+              .id(foundDetailPhotoEntity.user.id)
+              .createdAt(getDateFormat(foundDetailPhotoEntity.user.createdAt))
+              .email(foundDetailPhotoEntity.user.email)
+              .nickName(foundDetailPhotoEntity.user.nickName)
+              .build(),
+          )
           .createdAt(getDateFormat(foundDetailPhotoEntity.createdAt))
           .hashTags(
             foundDetailPhotoEntity.photoHashTags.map((_d) => _d.hashTag.name),

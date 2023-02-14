@@ -1,5 +1,5 @@
+import { UserReseponseDto } from '@/main/user/dtos/response/user-response.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
 
 export class PhotoResponseDto {
   @ApiProperty({
@@ -23,10 +23,10 @@ export class PhotoResponseDto {
   expiredAt: string;
 
   @ApiProperty({
-    description: '유저 닉네임',
+    type: UserReseponseDto,
+    description: '포토 소유 유저',
   })
-  @IsString()
-  userNickName: string;
+  user: UserReseponseDto;
 
   @ApiProperty({
     description: '포토 생성 날짜',

@@ -17,6 +17,7 @@ import { FileRepository } from '@/sub/file/repositories/file.repository';
 import { PHOTO_SPAN_LIST } from '@/main/photo/constants';
 import { PhotoCreateInfoResponseDto } from '@/main/photo/dtos/response/photo-create-info-response.dto';
 import { EvaluationRepository } from '@/main/evaluation/repositories/evaluation.repository';
+import { UserReseponseDto } from '@/main/user/dtos/response/user-response.dto';
 
 @Injectable()
 export class PhotoService {
@@ -133,7 +134,14 @@ export class PhotoService {
         .url(_d.file.url)
         .description(_d.description)
         .expiredAt(getDateFormat(_d.expiredAt))
-        .userNickName(_d.user.nickName)
+        .user(
+          Builder(UserReseponseDto)
+            .id(_d.user.id)
+            .createdAt(getDateFormat(_d.user.createdAt))
+            .email(_d.user.email)
+            .nickName(_d.user.nickName)
+            .build(),
+        )
         .createdAt(getDateFormat(_d.createdAt))
         .hashTags(_d.photoHashTags.map((__d) => __d.hashTag.name))
         .viewCount(null)
@@ -162,7 +170,14 @@ export class PhotoService {
       .url(foundPhotoEntity.file.url)
       .description(foundPhotoEntity.description)
       .expiredAt(getDateFormat(foundPhotoEntity.expiredAt))
-      .userNickName(foundPhotoEntity.user.nickName)
+      .user(
+        Builder(UserReseponseDto)
+          .id(foundPhotoEntity.user.id)
+          .createdAt(getDateFormat(foundPhotoEntity.user.createdAt))
+          .email(foundPhotoEntity.user.email)
+          .nickName(foundPhotoEntity.user.nickName)
+          .build(),
+      )
       .createdAt(getDateFormat(foundPhotoEntity.createdAt))
       .hashTags(foundPhotoEntity.photoHashTags.map((_d) => _d.hashTag.name))
       .viewCount(viewCount)
