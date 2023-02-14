@@ -16,6 +16,7 @@ import { PhotoHashTagEntity } from '@/main/photo/entities/photo-hashtag.entity';
 import { FileRepository } from '@/sub/file/repositories/file.repository';
 import { PHOTO_SPAN_LIST } from '@/main/photo/constants';
 import { PhotoCreateInfoResponseDto } from '@/main/photo/dtos/response/photo-create-info-response.dto';
+import { EvaluationRepository } from '@/main/evaluation/repositories/evaluation.repository';
 
 @Injectable()
 export class PhotoService {
@@ -28,6 +29,7 @@ export class PhotoService {
     private readonly hashTagRepository: HashTagReository,
     private readonly photoHashTagRepository: PhotoHashTagRepository,
     private readonly fileRepository: FileRepository,
+    private readonly evaluationRepository: EvaluationRepository,
   ) {}
 
   async create(user: UserEntity, photoRequestDto: PhotoRequestDto) {
@@ -134,11 +136,13 @@ export class PhotoService {
         .userNickName(_d.user.nickName)
         .createdAt(getDateFormat(_d.createdAt))
         .hashTags(_d.photoHashTags.map((__d) => __d.hashTag.name))
+        .viewCount(null)
+        .likeCount(null)
         .build();
     });
   }
 
-  async findOne(id: number): Promise<PhotoResponseDto> {
+  async findOne(user: UserEntity, id: number): Promise<PhotoResponseDto> {
     const foundPhotoEntity = await this.photoRepository.findOneById(id);
 
     if (!foundPhotoEntity) {
@@ -148,6 +152,11 @@ export class PhotoService {
       });
     }
 
+    const { viewCount, likeCount } = await this._getViewAndLikeCountByUser(
+      user,
+      foundPhotoEntity,
+    );
+
     return Builder(PhotoResponseDto)
       .id(foundPhotoEntity.id)
       .url(foundPhotoEntity.file.url)
@@ -156,7 +165,33 @@ export class PhotoService {
       .userNickName(foundPhotoEntity.user.nickName)
       .createdAt(getDateFormat(foundPhotoEntity.createdAt))
       .hashTags(foundPhotoEntity.photoHashTags.map((_d) => _d.hashTag.name))
+      .viewCount(viewCount)
+      .likeCount(likeCount)
       .build();
+  }
+
+  private async _getViewAndLikeCountByUser(
+    user: UserEntity,
+    photo: PhotoEntity,
+  ): Promise<{
+    viewCount: number | null;
+    likeCount: number | null;
+  }> {
+    if (user.id !== photo.userId) {
+      return {
+        viewCount: null,
+        likeCount: null,
+      };
+    }
+
+    // 인증 유저가 조회하려는 포토 본인이면
+    const foundEvaluationEntities =
+      await this.evaluationRepository.findManyByPhotoId(photo.id);
+
+    return {
+      viewCount: foundEvaluationEntities.length,
+      likeCount: foundEvaluationEntities.filter((_d) => _d.isGood).length,
+    };
   }
 
   getInfoForCreation() {

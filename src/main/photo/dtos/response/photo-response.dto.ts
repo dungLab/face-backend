@@ -37,4 +37,16 @@ export class PhotoResponseDto {
     description: '포토의 해시태그들',
   })
   hashTags: string[];
+
+  @ApiProperty({
+    type: Number,
+    nullable: true,
+  })
+  viewCount: number | null;
+
+  @ApiProperty({
+    type: Number,
+    nullable: true,
+  })
+  likeCount?: number | null;
 }

@@ -5,9 +5,10 @@ import { PhotoRepository } from '@/main/photo/repositories/photo.repository';
 import { Module } from '@nestjs/common';
 import { PhotoController } from './photo.controller';
 import { PhotoService } from './photo.service';
+import { EvaluationModule } from '@/main/evaluation/evaluation.module';
 
 @Module({
-  imports: [FileModule],
+  imports: [FileModule, EvaluationModule],
   controllers: [PhotoController],
   providers: [
     //services

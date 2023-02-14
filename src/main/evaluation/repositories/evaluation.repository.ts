@@ -28,4 +28,14 @@ export class EvaluationRepository extends Repository<EvaluationEntity> {
       .limit(1)
       .getOne();
   }
+
+  async findManyByPhotoId(photoId: number) {
+    return await this._getBaseQueryBuilder()
+      .withDeleted()
+      .where('evaluation.photoId = :photoId', {
+        photoId,
+      })
+      .andWhere('evaluation.deletedAt IS NULL')
+      .getMany();
+  }
 }

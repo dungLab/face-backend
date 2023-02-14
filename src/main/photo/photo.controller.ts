@@ -39,7 +39,7 @@ export class PhotoController {
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   getOne(@User() user: UserEntity, @Param('id', ParseIntPipe) id: number) {
-    return this.photoService.findOne(id);
+    return this.photoService.findOne(user, id);
   }
 
   @ApiDocs.getInfoForCreation('포토 생성을 위한 정보 조회')
