@@ -28,4 +28,4 @@ export const PHOTO_SPAN_LIST = [
 
   // 3달
   7_889_400_000,
-] as const;
+];

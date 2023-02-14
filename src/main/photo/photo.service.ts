@@ -15,6 +15,7 @@ import { PhotoEntity } from '@/main/photo/entities/photo.entity';
 import { PhotoHashTagEntity } from '@/main/photo/entities/photo-hashtag.entity';
 import { FileRepository } from '@/sub/file/repositories/file.repository';
 import { PHOTO_SPAN_LIST } from '@/main/photo/constants';
+import { PhotoCreateInfoResponseDto } from '@/main/photo/dtos/response/photo-create-info-response.dto';
 
 @Injectable()
 export class PhotoService {
@@ -159,6 +160,6 @@ export class PhotoService {
   }
 
   getInfoForCreation() {
-    return PHOTO_SPAN_LIST;
+    return Builder(PhotoCreateInfoResponseDto).spans(PHOTO_SPAN_LIST).build();
   }
 }
