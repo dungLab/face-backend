@@ -14,6 +14,7 @@ import * as _ from 'lodash';
 import { PhotoEntity } from '@/main/photo/entities/photo.entity';
 import { PhotoHashTagEntity } from '@/main/photo/entities/photo-hashtag.entity';
 import { FileRepository } from '@/sub/file/repositories/file.repository';
+import { PHOTO_SPAN_LIST } from '@/main/photo/constants';
 
 @Injectable()
 export class PhotoService {
@@ -155,5 +156,9 @@ export class PhotoService {
       .createdAt(getDateFormat(foundPhotoEntity.createdAt))
       .hashTags(foundPhotoEntity.photoHashTags.map((_d) => _d.hashTag.name))
       .build();
+  }
+
+  getInfoForCreation() {
+    return PHOTO_SPAN_LIST;
   }
 }

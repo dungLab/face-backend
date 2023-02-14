@@ -9,6 +9,7 @@ import {
 } from '@nestjs/swagger';
 import { PhotoRequestDto } from '@/main/photo/dtos/request/photo-request.dto';
 import { SwaggerMethodDoc } from '@/common/docs/types';
+import { PhotoCreateInfoResponseDto } from '@/main/photo/dtos/response/photo-create-info-response.dto';
 
 export const ApiDocs: SwaggerMethodDoc<PhotoController> = {
   create(summary) {
@@ -55,6 +56,21 @@ export const ApiDocs: SwaggerMethodDoc<PhotoController> = {
       ApiResponse({
         status: 201,
         type: PhotoResponseDto,
+        description: '포토 조회 성공',
+      }),
+      ApiResponse({ status: 403, description: 'Forbidden.' }),
+    );
+  },
+  getInfoForCreation(summary) {
+    return applyDecorators(
+      ApiBearerAuth('jwt'),
+      ApiOperation({
+        summary: summary,
+        description: '포토 생성 페이지에서 생성을 위해 제공해주는 정보',
+      }),
+      ApiResponse({
+        status: 201,
+        type: PhotoCreateInfoResponseDto,
         description: '포토 조회 성공',
       }),
       ApiResponse({ status: 403, description: 'Forbidden.' }),
