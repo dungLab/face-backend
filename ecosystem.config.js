@@ -5,7 +5,7 @@ module.exports = {
       script: 'dist/main.js',
       instances: 'max',
       exec_mode: 'cluster',
-      env: {
+      env_development: {
         NODE_ENV: 'development',
       },
       env_production: {

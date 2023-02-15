@@ -12,6 +12,7 @@
     "start": "nest start",
     "start:dev": "rimraf dist && nest start --watch",
     "start:debug": "nest start --debug --watch",
+    "prod:local": "pm2 start ecosystem.config.js",
     "prod:prod": "pm2 start ecosystem.config.js --env production",
     "prod:dev": "pm2 start ecosystem.config.js --env development",
     "del": "pm2 del all",
