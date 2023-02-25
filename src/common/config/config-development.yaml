@@ -1,5 +1,5 @@
 kakao:
-  redirect-uri: 'http://13.209.3.55:3000/auth/kakao/callback'
+  redirect-uri: 'https://face-dev.dung-lab.link/auth/kakao/callback'
   info:
     url: 'https://kapi.kakao.com/v2/user/me'
   authorize:
