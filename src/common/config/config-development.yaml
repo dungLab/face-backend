@@ -14,4 +14,4 @@ jwt:
     expires: '12d'
 
 front:
-  redirect-uri: 'http://localhost:3030'
+  redirect-uri: 'http://localhost:3030/auth/token'

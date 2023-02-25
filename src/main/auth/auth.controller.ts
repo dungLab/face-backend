@@ -37,12 +37,12 @@ export class AuthController {
       code,
     );
 
-    res.cookie('dunglab-accessToken', accessToken);
-    res.cookie('dunglab-refreshToken', refreshToken);
-
     const redirectUrl = this.configService.get<string>('front.redirect-uri');
 
-    res.redirect(301, redirectUrl);
+    res.redirect(
+      301,
+      `${redirectUrl}?access-token=${accessToken}&refresh-token=${refreshToken}`,
+    );
   }
 
   @ApiDocs.refreshToken('refreshToken으로 accessToken 재발급')
