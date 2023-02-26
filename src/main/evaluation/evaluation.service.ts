@@ -1,5 +1,5 @@
 import { ErrorResponse } from '@/common/error-response.exception';
-import { getDateFormat } from '@/common/utils/date.util';
+import { getDateFormat, getNowDate } from '@/common/utils/date.util';
 import { EvaluationTargetType } from '@/main/evaluation/constants';
 import { EvaluationRequestDto } from '@/main/evaluation/dtos/request/evaluation-request.dto';
 import { EvaluationResponseDto } from '@/main/evaluation/dtos/response/evaluation-response.dto';
@@ -112,6 +112,14 @@ export class EvaluationService {
     if (userId === foundSimplePhotoEntity.userId) {
       throw new ErrorResponse(HttpStatus.BAD_REQUEST, {
         message: 'could not evalute my photo',
+        code: -1,
+      });
+    }
+
+    const isOverExpired = getNowDate() > foundSimplePhotoEntity.expiredAt;
+    if (isOverExpired) {
+      throw new ErrorResponse(HttpStatus.BAD_REQUEST, {
+        message: 'over evaluation expired time',
         code: -1,
       });
     }

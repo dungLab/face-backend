@@ -72,11 +72,11 @@ export class PhotoRepository extends Repository<PhotoEntity> {
       .getMany();
   }
 
-  // select id, user_id
+  // select id, user_id, 'expired_at'
   async findSimpleOneById(id: number) {
     return await this._getBaseQueryBuilder()
       .withDeleted()
-      .select(['photo.id', 'photo.userId'])
+      .select(['photo.id', 'photo.userId', 'photo.expiredAt'])
       .where('photo.id = :id', {
         id,
       })
