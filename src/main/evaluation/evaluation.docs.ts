@@ -1,5 +1,4 @@
 import { SwaggerMethodDoc } from '@/common/docs/types';
-import { PaginationRequestDto } from '@/common/dtos/request/pagination-request.dto';
 import { EvaluationTargetType } from '@/main/evaluation/constants';
 import { EvaluationRequestDto } from '@/main/evaluation/dtos/request/evaluation-request.dto';
 import { EvaluationResponseDto } from '@/main/evaluation/dtos/response/evaluation-response.dto';
