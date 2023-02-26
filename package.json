@@ -1,8 +1,8 @@
 {
   "name": "face-backend",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "face-backend project",
+  "author": "YeomJaeSeon",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
