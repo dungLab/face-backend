@@ -5,12 +5,16 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+@Index('uk_user_id_photo_id', ['userId', 'photoId'], {
+  unique: true,
+})
 @Entity('EVALUATION')
 export class EvaluationEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
