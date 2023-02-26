@@ -58,6 +58,20 @@ export class PhotoRepository extends Repository<PhotoEntity> {
       .getOne();
   }
 
+  async findManyByIds(ids: number[]) {
+    return await this._getBaseQueryBuilder()
+      .withDeleted()
+      .leftJoinAndSelect('photo.user', 'user')
+      .leftJoinAndSelect('photo.file', 'file')
+      .leftJoinAndSelect('photo.photoHashTags', 'photoHashTags')
+      .leftJoinAndSelect('photoHashTags.hashTag', 'hashTag')
+      .where('photo.id IN (:...ids)', {
+        ids,
+      })
+      .andWhere('photo.deletedAt IS NULL')
+      .getMany();
+  }
+
   // select id, user_id
   async findSimpleOneById(id: number) {
     return await this._getBaseQueryBuilder()
@@ -71,10 +85,10 @@ export class PhotoRepository extends Repository<PhotoEntity> {
       .getOne();
   }
 
-  async findOneForEvaluation(requestUserId: number) {
+  async findManyForEvaluation(requestUserId: number, pageSize: number) {
     return await this._getBaseQueryBuilder()
       .withDeleted()
-      .select('photo.id')
+      .select(['photo.id', 'photo.expiredAt'])
       .leftJoin(
         'photo.evaluations',
         'evaluations',
@@ -87,7 +101,8 @@ export class PhotoRepository extends Repository<PhotoEntity> {
       .andWhere('photo.expiredAt > NOW()')
       .andWhere('photo.deletedAt IS NULL')
       .andWhere('evaluations.id IS NULL')
+      .take(pageSize)
       .orderBy('photo.expiredAt', 'ASC')
-      .getOne();
+      .getMany();
   }
 }

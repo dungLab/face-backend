@@ -14,6 +14,8 @@ import { UserReseponseDto } from '@/main/user/dtos/response/user-response.dto';
 
 @Injectable()
 export class EvaluationService {
+  private static readonly PAGE_SIZE: number = 20;
+
   constructor(
     //repositories
     private readonly evaluationRepository: EvaluationRepository,
@@ -21,52 +23,51 @@ export class EvaluationService {
     private readonly logEvaluationRepository: LogEvaluationRepository,
   ) {}
 
-  async getOne(
+  async getMany(
     user: UserEntity,
     targetType: EvaluationTargetType,
-  ): Promise<EvaluationResponseDto | null> {
+  ): Promise<EvaluationResponseDto[] | null> {
     switch (targetType) {
       case EvaluationTargetType.ALL: {
-        // 1. select one 평가할 photoEntity
-        const foundSimplePhotoEntity =
-          await this.photoRepository.findOneForEvaluation(user.id);
+        // 1. 평가할 photoEntities select
+        const foundSimpleEvaluationPhotoEntities =
+          await this.photoRepository.findManyForEvaluation(
+            user.id,
+            EvaluationService.PAGE_SIZE,
+          );
 
-        if (!foundSimplePhotoEntity) {
+        if (foundSimpleEvaluationPhotoEntities.length === 0) {
           return null;
         }
 
-        const { id } = foundSimplePhotoEntity;
-
-        // 2. select detail by photoId(위에서 조회한)
-        const foundDetailPhotoEntity = await this.photoRepository.findOneById(
-          id,
+        const photoIdsForEvaluation = foundSimpleEvaluationPhotoEntities.map(
+          (_d) => _d.id,
         );
 
-        // log
-        this.logEvaluationRepository.save({
-          userId: user.id,
-          photoId: id,
-          isGet: true,
-        });
+        // 2. select detail by photoId(위에서 조회한)
+        const foundDetailPhotoEntities =
+          await this.photoRepository.findManyByIds(photoIdsForEvaluation);
 
-        return Builder(EvaluationResponseDto)
-          .id(foundDetailPhotoEntity.id)
-          .url(foundDetailPhotoEntity.file.url)
-          .description(foundDetailPhotoEntity.description)
-          .expiredAt(getDateFormat(foundDetailPhotoEntity.expiredAt))
-          .user(
-            Builder(UserReseponseDto)
-              .id(foundDetailPhotoEntity.user.id)
-              .createdAt(getDateFormat(foundDetailPhotoEntity.user.createdAt))
-              .email(foundDetailPhotoEntity.user.email)
-              .nickName(foundDetailPhotoEntity.user.nickName)
-              .build(),
-          )
-          .createdAt(getDateFormat(foundDetailPhotoEntity.createdAt))
-          .hashTags(
-            foundDetailPhotoEntity.photoHashTags.map((_d) => _d.hashTag.name),
-          )
-          .build();
+        return foundDetailPhotoEntities.map((foundDetailPhotoEntity) => {
+          return Builder(EvaluationResponseDto)
+            .id(foundDetailPhotoEntity.id)
+            .url(foundDetailPhotoEntity.file.url)
+            .description(foundDetailPhotoEntity.description)
+            .expiredAt(getDateFormat(foundDetailPhotoEntity.expiredAt))
+            .user(
+              Builder(UserReseponseDto)
+                .id(foundDetailPhotoEntity.user.id)
+                .createdAt(getDateFormat(foundDetailPhotoEntity.user.createdAt))
+                .email(foundDetailPhotoEntity.user.email)
+                .nickName(foundDetailPhotoEntity.user.nickName)
+                .build(),
+            )
+            .createdAt(getDateFormat(foundDetailPhotoEntity.createdAt))
+            .hashTags(
+              foundDetailPhotoEntity.photoHashTags.map((_d) => _d.hashTag.name),
+            )
+            .build();
+        });
       }
       default: {
         throw new ErrorResponse(HttpStatus.BAD_REQUEST, {

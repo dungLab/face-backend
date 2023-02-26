@@ -21,14 +21,14 @@ import { ApiTags } from '@nestjs/swagger';
 export class EvaluationController {
   constructor(private readonly evaluationService: EvaluationService) {}
 
-  @ApiDocs.getOne('평가할 사진 하나 조회')
+  @ApiDocs.getMany('평가할 포토 리스트 조회')
   @UseGuards(JwtAuthGuard)
   @Get(':targetType')
-  getOne(
+  getMany(
     @User() user: UserEntity,
     @Param('targetType') targetType: EvaluationTargetType,
   ) {
-    return this.evaluationService.getOne(user, targetType);
+    return this.evaluationService.getMany(user, targetType);
   }
 
   @ApiDocs.evaluateOne('photoId로 포토 평가')

@@ -13,7 +13,7 @@ import {
 } from '@nestjs/swagger';
 
 export const ApiDocs: SwaggerMethodDoc<EvaluationController> = {
-  getOne(summary) {
+  getMany(summary) {
     return applyDecorators(
       ApiBearerAuth('jwt'),
       ApiParam({
@@ -23,12 +23,14 @@ export const ApiDocs: SwaggerMethodDoc<EvaluationController> = {
       }),
       ApiOperation({
         summary: summary,
-        description: '평가할 사진 만료기간 얼마 남지 않은 사진부터 하나 조회',
+        description:
+          '평가할 포토 만료기간 얼마 남지 않은 포토부터 리스트로 조회',
       }),
       ApiResponse({
         status: 201,
         type: EvaluationResponseDto,
-        description: '평가할 사진 하나 조회 성공 (없으면 null응답)',
+        isArray: true,
+        description: '평가할 포토 리스트 조회 성공 (없으면 null응답)',
       }),
       ApiResponse({ status: 403, description: 'Forbidden.' }),
     );
