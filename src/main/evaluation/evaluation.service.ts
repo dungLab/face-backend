@@ -30,17 +30,17 @@ export class EvaluationService {
     switch (targetType) {
       case EvaluationTargetType.ALL: {
         // 1. 평가할 photoEntities select
-        const foundSimpleEvaluationPhotoEntities =
+        const foundSimplePhotoEntities =
           await this.photoRepository.findManyForEvaluation(
             user.id,
             EvaluationService.PAGE_SIZE,
           );
 
-        if (foundSimpleEvaluationPhotoEntities.length === 0) {
+        if (foundSimplePhotoEntities.length === 0) {
           return null;
         }
 
-        const photoIdsForEvaluation = foundSimpleEvaluationPhotoEntities.map(
+        const photoIdsForEvaluation = foundSimplePhotoEntities.map(
           (_d) => _d.id,
         );
 
