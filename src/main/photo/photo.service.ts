@@ -66,7 +66,7 @@ export class PhotoService {
 
       const savedPhotoEntity = await queryRunner.manager.save(photoEntity);
 
-      if (hashTags) {
+      if (hashTags && hashTags.length > 0) {
         // hash tag 처리
         await this.createHashTags(hashTags, savedPhotoEntity.id, queryRunner);
       }
@@ -88,7 +88,9 @@ export class PhotoService {
     queryRunner: QueryRunner,
   ) {
     const alreadyExistedHashTagEntities =
-      await this.hashTagRepository.findManyByNames(hashTags, queryRunner);
+      hashTags.length > 0
+        ? await this.hashTagRepository.findManyByNames(hashTags, queryRunner)
+        : [];
 
     const newHashTagEntities = [...new Set(hashTags)].map(
       (_d): HashTagEntity => {

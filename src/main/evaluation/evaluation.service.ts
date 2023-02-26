@@ -46,7 +46,9 @@ export class EvaluationService {
 
         // 2. select detail by photoId(위에서 조회한)
         const foundDetailPhotoEntities =
-          await this.photoRepository.findManyByIds(photoIdsForEvaluation);
+          photoIdsForEvaluation.length > 0
+            ? await this.photoRepository.findManyByIds(photoIdsForEvaluation)
+            : [];
 
         return foundDetailPhotoEntities.map((foundDetailPhotoEntity) => {
           return Builder(EvaluationResponseDto)
