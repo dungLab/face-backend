@@ -13,6 +13,10 @@ export class UserService {
     private readonly userRepository: UserRepository,
   ) {}
 
+  async findById(id: number) {
+    return await this.userRepository.findById(id);
+  }
+
   async findByEmail(email: string) {
     return await this.userRepository.findByEmail(email);
   }

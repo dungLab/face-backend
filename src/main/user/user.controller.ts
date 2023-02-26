@@ -3,7 +3,7 @@ import { User } from '@/main/auth/user.decorator';
 import { UserEntity } from '@/main/user/entities/user.entity';
 import { ApiDocs } from '@/main/user/user.docs';
 import { UserService } from '@/main/user/user.service';
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('face > 유저')

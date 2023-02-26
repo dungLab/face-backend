@@ -1,7 +1,7 @@
 import { OAuthServiceType } from '@/main/auth/constants';
 import { UserEntity } from '@/main/user/entities/user.entity';
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, QueryRunner, Repository } from 'typeorm';
 
 @Injectable()
 export class UserRepository extends Repository<UserEntity> {
@@ -9,8 +9,24 @@ export class UserRepository extends Repository<UserEntity> {
     super(UserEntity, dataSource.createEntityManager());
   }
 
+  private _getBaseQueryBuilder(queryRunner?: QueryRunner) {
+    return queryRunner
+      ? this.createQueryBuilder('user', queryRunner)
+      : this.createQueryBuilder('user');
+  }
+
+  async findById(id: number) {
+    return await this._getBaseQueryBuilder()
+      .withDeleted()
+      .where('user.id = :id', {
+        id,
+      })
+      .andWhere('user.deletedAt IS NULL')
+      .getOne();
+  }
+
   async findByEmail(email: string) {
-    return await this.createQueryBuilder('user')
+    return await this._getBaseQueryBuilder()
       .withDeleted()
       .where('user.email = :email', {
         email,
@@ -20,7 +36,7 @@ export class UserRepository extends Repository<UserEntity> {
   }
 
   async findByEmailAndType(email: string, type: OAuthServiceType) {
-    return await this.createQueryBuilder('user')
+    return await this._getBaseQueryBuilder()
       .withDeleted()
       .where('user.email = :email', {
         email,
