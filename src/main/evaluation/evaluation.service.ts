@@ -66,6 +66,10 @@ export class EvaluationService {
             .hashTags(
               foundDetailPhotoEntity.photoHashTags.map((_d) => _d.hashTag.name),
             )
+            .likePercentage(null)
+            .viewCount(null)
+            .likeCount(null)
+            .hateCount(null)
             .build();
         });
       }

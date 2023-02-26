@@ -39,6 +39,12 @@ export class PhotoResponseDto {
   hashTags: string[];
 
   @ApiProperty({
+    type: String,
+    nullable: true,
+  })
+  likePercentage: string | null;
+
+  @ApiProperty({
     type: Number,
     nullable: true,
   })
@@ -48,5 +54,11 @@ export class PhotoResponseDto {
     type: Number,
     nullable: true,
   })
-  likeCount?: number | null;
+  likeCount: number | null;
+
+  @ApiProperty({
+    type: Number,
+    nullable: true,
+  })
+  hateCount: number | null;
 }

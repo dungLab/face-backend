@@ -122,32 +122,41 @@ export class PhotoService {
     return true;
   }
 
-  async findMany(user: UserEntity): Promise<PhotoResponseDto[]> {
+  async findMany(user: UserEntity) {
     const userId = user.id;
 
     const foundPhotoEntities =
       await this.photoRepository.findManyCursorByUserId(userId);
 
-    return foundPhotoEntities.map((_d) => {
-      return Builder(PhotoResponseDto)
-        .id(_d.id)
-        .url(_d.file.url)
-        .description(_d.description)
-        .expiredAt(getDateFormat(_d.expiredAt))
-        .user(
-          Builder(UserReseponseDto)
-            .id(_d.user.id)
-            .createdAt(getDateFormat(_d.user.createdAt))
-            .email(_d.user.email)
-            .nickName(_d.user.nickName)
-            .build(),
-        )
-        .createdAt(getDateFormat(_d.createdAt))
-        .hashTags(_d.photoHashTags.map((__d) => __d.hashTag.name))
-        .viewCount(null)
-        .likeCount(null)
-        .build();
-    });
+    const result = await Promise.all(
+      foundPhotoEntities.map(async (_d) => {
+        const { likePercentage, viewCount, likeCount, hateCount } =
+          await this._getPhotoReactionInfo(_d);
+
+        return Builder(PhotoResponseDto)
+          .id(_d.id)
+          .url(_d.file.url)
+          .description(_d.description)
+          .expiredAt(getDateFormat(_d.expiredAt))
+          .user(
+            Builder(UserReseponseDto)
+              .id(_d.user.id)
+              .createdAt(getDateFormat(_d.user.createdAt))
+              .email(_d.user.email)
+              .nickName(_d.user.nickName)
+              .build(),
+          )
+          .createdAt(getDateFormat(_d.createdAt))
+          .hashTags(_d.photoHashTags.map((__d) => __d.hashTag.name))
+          .likePercentage(likePercentage)
+          .viewCount(viewCount)
+          .likeCount(likeCount)
+          .hateCount(hateCount)
+          .build();
+      }),
+    );
+
+    return result;
   }
 
   async findOne(user: UserEntity, id: number): Promise<PhotoResponseDto> {
@@ -160,10 +169,8 @@ export class PhotoService {
       });
     }
 
-    const { viewCount, likeCount } = await this._getViewAndLikeCountByUser(
-      user,
-      foundPhotoEntity,
-    );
+    const { likePercentage, viewCount, likeCount, hateCount } =
+      await this._getPhotoReactionInfo(foundPhotoEntity);
 
     return Builder(PhotoResponseDto)
       .id(foundPhotoEntity.id)
@@ -180,32 +187,36 @@ export class PhotoService {
       )
       .createdAt(getDateFormat(foundPhotoEntity.createdAt))
       .hashTags(foundPhotoEntity.photoHashTags.map((_d) => _d.hashTag.name))
+      .likePercentage(likePercentage)
       .viewCount(viewCount)
       .likeCount(likeCount)
+      .hateCount(hateCount)
       .build();
   }
 
-  private async _getViewAndLikeCountByUser(
-    user: UserEntity,
-    photo: PhotoEntity,
-  ): Promise<{
-    viewCount: number | null;
-    likeCount: number | null;
+  private async _getPhotoReactionInfo(photo: PhotoEntity): Promise<{
+    likePercentage: string;
+    viewCount: number;
+    likeCount: number;
+    hateCount: number;
   }> {
-    if (user.id !== photo.userId) {
-      return {
-        viewCount: null,
-        likeCount: null,
-      };
-    }
-
     // 인증 유저가 조회하려는 포토 본인이면
     const foundEvaluationEntities =
       await this.evaluationRepository.findManyByPhotoId(photo.id);
 
+    const likeCount = foundEvaluationEntities.filter((_d) => _d.isGood).length;
+    const hateCount = foundEvaluationEntities.filter((_d) => !_d.isGood).length;
+    const viewCount = likeCount + hateCount;
+
     return {
-      viewCount: foundEvaluationEntities.length,
-      likeCount: foundEvaluationEntities.filter((_d) => _d.isGood).length,
+      // 소수 둘째자리에서 반올림
+      likePercentage:
+        viewCount === 0
+          ? '0.0%'
+          : `${((likeCount / (likeCount + hateCount)) * 100).toFixed(1)}%`,
+      viewCount,
+      likeCount,
+      hateCount,
     };
   }
 
