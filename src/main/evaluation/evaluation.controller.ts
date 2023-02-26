@@ -1,3 +1,4 @@
+import { PaginationRequestDto } from '@/common/dtos/request/pagination-request.dto';
 import { JwtAuthGuard } from '@/main/auth/jwt-auth.guard';
 import { User } from '@/main/auth/user.decorator';
 import { EvaluationTargetType } from '@/main/evaluation/constants';
@@ -12,6 +13,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -27,8 +29,9 @@ export class EvaluationController {
   getMany(
     @User() user: UserEntity,
     @Param('targetType') targetType: EvaluationTargetType,
+    @Query() query: PaginationRequestDto,
   ) {
-    return this.evaluationService.getMany(user, targetType);
+    return this.evaluationService.getMany(user, targetType, query);
   }
 
   @ApiDocs.evaluateOne('photoId로 포토 평가')

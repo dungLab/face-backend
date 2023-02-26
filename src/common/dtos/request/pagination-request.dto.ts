@@ -1,22 +1,14 @@
-import { IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { IsNumber, IsOptional } from 'class-validator';
 
-export enum SortType {
-  ID = 'id',
-  CREATED_AT = 'creaetdAt',
-}
-
-export enum FilterType {
-  LIKE = 'like',
-  DATE = 'date',
-  EXAMINATION = 'examination',
-}
-
-class PaginationRequestDto {
+export class PaginationRequestDto {
+  @ApiProperty({
+    description: '페이지 사이즈',
+  })
+  @Type(() => Number)
   @IsNumber()
-  pagesize: number;
-
-  @IsEnum(SortType)
-  sort: SortType = SortType.ID;
+  pageSize: number;
 }
 
 export class CursorPaginationRequestDto extends PaginationRequestDto {

@@ -11,11 +11,10 @@ import { UserEntity } from '@/main/user/entities/user.entity';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { Builder } from 'builder-pattern';
 import { UserReseponseDto } from '@/main/user/dtos/response/user-response.dto';
+import { PaginationRequestDto } from '@/common/dtos/request/pagination-request.dto';
 
 @Injectable()
 export class EvaluationService {
-  private static readonly PAGE_SIZE: number = 20;
-
   constructor(
     //repositories
     private readonly evaluationRepository: EvaluationRepository,
@@ -26,6 +25,7 @@ export class EvaluationService {
   async getMany(
     user: UserEntity,
     targetType: EvaluationTargetType,
+    query: PaginationRequestDto,
   ): Promise<EvaluationResponseDto[] | null> {
     switch (targetType) {
       case EvaluationTargetType.ALL: {
@@ -33,7 +33,7 @@ export class EvaluationService {
         const foundSimplePhotoEntities =
           await this.photoRepository.findManyForEvaluation(
             user.id,
-            EvaluationService.PAGE_SIZE,
+            query.pageSize,
           );
 
         if (foundSimplePhotoEntities.length === 0) {

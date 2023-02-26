@@ -69,6 +69,7 @@ export class PhotoRepository extends Repository<PhotoEntity> {
         ids,
       })
       .andWhere('photo.deletedAt IS NULL')
+      .orderBy('photo.expiredAt', 'ASC')
       .getMany();
   }
 
