@@ -40,6 +40,9 @@ function getSecretConfiguration() {
       secretAccessKey: requireEnv('SECRET_ACCESS_KEY'),
       region: requireEnv('REGION'),
     },
+    jwt: {
+      secretKey: requireEnv('JWT_SECRET_KEY'),
+    },
   };
 }
 

@@ -8,7 +8,7 @@ import { PhotoModule } from '@/main/photo/photo.module';
 import { S3Module } from '@/sub/s3/s3.module';
 import { UserModule } from '@/main/user/user.module';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileModule } from './sub/file/file.module';
 import { EvaluationModule } from './main/evaluation/evaluation.module';
@@ -23,7 +23,10 @@ import { LoggerMiddleware } from '@/common/middlewares/logger.middleware';
     }),
 
     // typeorm module
-    TypeOrmModule.forRootAsync({ useFactory: () => ormconfig }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ormconfig(config),
+    }),
 
     // http module
     HttpModule,

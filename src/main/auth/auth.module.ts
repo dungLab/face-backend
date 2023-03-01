@@ -8,14 +8,16 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtAuthStrategy } from '@/main/auth/jwt.strategy';
 import { AuthService } from '@/main/auth/services/auth.service';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.registerAsync({
-      useFactory: () => {
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
         return {
-          secret: 'face-secret',
+          secret: config.get<string>('jwt.secretKey'),
         };
       },
     }),
