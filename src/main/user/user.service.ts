@@ -36,12 +36,23 @@ export class UserService {
     );
   }
 
-  getUserInfo(user: UserEntity): UserReseponseDto {
+  async getUserInfo(user: UserEntity): Promise<UserReseponseDto> {
+    const foundUserEntity = await this.userRepository.findWithFileById(user.id);
+
+    if (!foundUserEntity) {
+      throw new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, {
+        message: 'there is no user by id',
+        code: -1,
+      });
+    }
     return Builder(UserReseponseDto)
-      .id(user.id)
-      .email(user.email)
-      .nickName(user.nickName)
-      .createdAt(getDateFormat(user.createdAt))
+      .id(foundUserEntity.id)
+      .email(foundUserEntity.email)
+      .nickName(foundUserEntity.nickName)
+      .introduction(foundUserEntity.introduction)
+      .link(foundUserEntity.link)
+      .url(foundUserEntity.file?.url ?? null)
+      .createdAt(getDateFormat(foundUserEntity.createdAt))
       .build();
   }
 

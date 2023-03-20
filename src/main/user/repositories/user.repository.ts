@@ -25,6 +25,17 @@ export class UserRepository extends Repository<UserEntity> {
       .getOne();
   }
 
+  async findWithFileById(id: number, queryRunner?: QueryRunner) {
+    return await this._getBaseQueryBuilder(queryRunner)
+      .withDeleted()
+      .leftJoinAndSelect('user.file', 'file')
+      .where('user.id = :id', {
+        id,
+      })
+      .andWhere('user.deletedAt IS NULL')
+      .getOne();
+  }
+
   async findByEmail(email: string) {
     return await this._getBaseQueryBuilder()
       .withDeleted()

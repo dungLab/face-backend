@@ -4,7 +4,7 @@ import { UpdateUserDto } from '@/main/user/dtos/request/update-user.dto';
 import { UserEntity } from '@/main/user/entities/user.entity';
 import { ApiDocs } from '@/main/user/user.docs';
 import { UserService } from '@/main/user/user.service';
-import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('face > 유저')
