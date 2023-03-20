@@ -1,8 +1,14 @@
 import { SwaggerMethodDoc } from '@/common/docs/types';
+import { UpdateUserDto } from '@/main/user/dtos/request/update-user.dto';
 import { UserReseponseDto } from '@/main/user/dtos/response/user-response.dto';
 import { UserController } from '@/main/user/user.controller';
 import { applyDecorators } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 
 export const ApiDocs: SwaggerMethodDoc<UserController> = {
   getInfo(summary) {
@@ -16,6 +22,24 @@ export const ApiDocs: SwaggerMethodDoc<UserController> = {
         status: 201,
         type: UserReseponseDto,
         description: '사용자 정상 생성',
+      }),
+      ApiResponse({ status: 403, description: 'Forbidden.' }),
+    );
+  },
+  update(summary) {
+    return applyDecorators(
+      ApiBearerAuth('jwt'),
+      ApiBody({
+        type: UpdateUserDto,
+      }),
+      ApiOperation({
+        summary: summary,
+        description: '유저 정보 수정',
+      }),
+      ApiResponse({
+        status: 201,
+        type: Boolean,
+        description: '유저 정보 수정 성공',
       }),
       ApiResponse({ status: 403, description: 'Forbidden.' }),
     );

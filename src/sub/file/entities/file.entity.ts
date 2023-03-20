@@ -6,7 +6,6 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -45,7 +44,7 @@ export class FileEntity {
   @OneToOne(() => PhotoEntity, (photo) => photo.file)
   photo: PhotoEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.files)
+  @OneToOne(() => UserEntity, (user) => user.file)
   @JoinColumn({
     name: 'user_id',
     referencedColumnName: 'id',

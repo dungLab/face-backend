@@ -1,9 +1,10 @@
 import { JwtAuthGuard } from '@/main/auth/jwt-auth.guard';
 import { User } from '@/main/auth/user.decorator';
+import { UpdateUserDto } from '@/main/user/dtos/request/update-user.dto';
 import { UserEntity } from '@/main/user/entities/user.entity';
 import { ApiDocs } from '@/main/user/user.docs';
 import { UserService } from '@/main/user/user.service';
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('face > 유저')
@@ -16,5 +17,12 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   getInfo(@User() user: UserEntity) {
     return this.userService.getUserInfo(user);
+  }
+
+  @ApiDocs.update('유저 정보 수정')
+  @Patch()
+  @UseGuards(JwtAuthGuard)
+  update(@User() user: UserEntity, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(user, updateUserDto);
   }
 }

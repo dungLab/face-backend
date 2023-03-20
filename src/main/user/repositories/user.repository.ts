@@ -15,8 +15,8 @@ export class UserRepository extends Repository<UserEntity> {
       : this.createQueryBuilder('user');
   }
 
-  async findById(id: number) {
-    return await this._getBaseQueryBuilder()
+  async findById(id: number, queryRunner?: QueryRunner) {
+    return await this._getBaseQueryBuilder(queryRunner)
       .withDeleted()
       .where('user.id = :id', {
         id,

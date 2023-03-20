@@ -9,6 +9,7 @@ import {
   Entity,
   Index,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -81,6 +82,6 @@ export class UserEntity {
   @OneToMany(() => EvaluationEntity, (evaluation) => evaluation.user)
   evaluations: EvaluationEntity[];
 
-  @OneToMany(() => FileEntity, (file) => file.user)
-  files: FileEntity[];
+  @OneToOne(() => FileEntity, (file) => file.user)
+  file: FileEntity;
 }
