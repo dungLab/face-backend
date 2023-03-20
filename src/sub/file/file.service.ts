@@ -45,10 +45,23 @@ export class FileService {
       }
       case FolderType.PROFILE: {
         // profile image upload
-        throw new ErrorResponse(HttpStatus.BAD_REQUEST, {
-          message: 'not defined image type',
-          code: -1,
+        const uploadedFileUrl = await this.s3Service.uploadAndGetUrl(
+          image,
+          S3BucketType.FACE,
+          folderType,
+        );
+
+        const savedFileEntity = await this.fileRepository.save({
+          type: FileType.IMAGE,
+          url: uploadedFileUrl,
         });
+
+        return Builder(FileReponseDto)
+          .id(savedFileEntity.id)
+          .type(savedFileEntity.type)
+          .url(savedFileEntity.url)
+          .createdAt(getDateFormat(savedFileEntity.createdAt))
+          .build();
       }
       default: {
         throw new ErrorResponse(HttpStatus.BAD_REQUEST, {
