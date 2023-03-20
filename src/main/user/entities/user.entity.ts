@@ -1,6 +1,7 @@
 import { OAuthServiceType } from '@/main/auth/constants';
 import { EvaluationEntity } from '@/main/evaluation/entities/evaluation.entity';
 import { PhotoEntity } from '@/main/photo/entities/photo.entity';
+import { FileEntity } from '@/sub/file/entities/file.entity';
 import {
   Column,
   CreateDateColumn,
@@ -37,6 +38,24 @@ export class UserEntity {
   nickName: string;
 
   @Column({
+    name: 'introduction',
+    type: 'varchar',
+    comment: '자기소개 내용',
+    length: 512,
+    nullable: true,
+  })
+  introduction?: string | null;
+
+  @Column({
+    name: 'link',
+    type: 'varchar',
+    comment: '자기 소개 링크',
+    length: 512,
+    nullable: true,
+  })
+  link?: string | null;
+
+  @Column({
     name: 'type',
     type: 'varchar',
     comment: '유저 타입 (kakao, naver, google, apple)',
@@ -61,4 +80,7 @@ export class UserEntity {
 
   @OneToMany(() => EvaluationEntity, (evaluation) => evaluation.user)
   evaluations: EvaluationEntity[];
+
+  @OneToMany(() => FileEntity, (file) => file.user)
+  files: FileEntity[];
 }
