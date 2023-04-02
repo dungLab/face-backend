@@ -14,4 +14,4 @@ jwt:
     expires: '12d'
 
 front:
-  redirect-uri: 'https://face-client-bundle.s3.ap-northeast-1.amazonaws.com/index.html/auth/token'
+  redirect-uri: 'https://d3nci1191iooos.cloudfront.net/auth/token'

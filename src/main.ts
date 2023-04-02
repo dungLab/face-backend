@@ -22,7 +22,7 @@ async function bootstrap() {
 
   //cors
   app.enableCors({
-    origin: ['http://localhost:3030'],
+    origin: ['http://localhost:3030', 'https://d3nci1191iooos.cloudfront.net'],
     methods: 'GET, PUT, POST, PATCH, DELETE',
     credentials: true,
   });
