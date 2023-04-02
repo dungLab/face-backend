@@ -14,3 +14,6 @@
 
 # swagger docs url
 - GET `/api-docs`
+
+# change ec2 KST timezone
+- `sudo timedatectl set-timezone Asia/Seoul`
