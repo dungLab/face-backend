@@ -18,6 +18,7 @@ import { PHOTO_SPAN_LIST } from '@/main/photo/constants';
 import { PhotoCreateInfoResponseDto } from '@/main/photo/dtos/response/photo-create-info-response.dto';
 import { EvaluationRepository } from '@/main/evaluation/repositories/evaluation.repository';
 import { UserReseponseDto } from '@/main/user/dtos/response/user-response.dto';
+import { PhotoListResponseDto } from '@/main/photo/dtos/response/photo-list-response.dto';
 
 @Injectable()
 export class PhotoService {
@@ -124,13 +125,13 @@ export class PhotoService {
     return true;
   }
 
-  async findMany(user: UserEntity) {
+  async findMany(user: UserEntity): Promise<PhotoListResponseDto> {
     const userId = user.id;
 
     const foundPhotoEntities =
       await this.photoRepository.findManyCursorByUserId(userId);
 
-    const result = await Promise.all(
+    const photos = await Promise.all(
       foundPhotoEntities.map(async (_d) => {
         const { likePercentage, viewCount, likeCount, hateCount } =
           await this._getPhotoReactionInfo(_d);
@@ -158,7 +159,17 @@ export class PhotoService {
       }),
     );
 
-    return result;
+    return {
+      photos,
+      info: {
+        // TODO: pagination 구현
+        totalCount: photos.length,
+        // TODO: pagination 구현
+        page: 1,
+        // TODO: pagination 구현
+        pageSize: 20,
+      },
+    };
   }
 
   async findOne(user: UserEntity, id: number): Promise<PhotoResponseDto> {
