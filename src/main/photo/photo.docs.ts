@@ -10,6 +10,7 @@ import {
 import { PhotoRequestDto } from '@/main/photo/dtos/request/photo-request.dto';
 import { SwaggerMethodDoc } from '@/common/docs/types';
 import { PhotoCreateInfoResponseDto } from '@/main/photo/dtos/response/photo-create-info-response.dto';
+import { PhotoListResponseDto } from '@/main/photo/dtos/response/photo-list-response.dto';
 
 export const ApiDocs: SwaggerMethodDoc<PhotoController> = {
   create(summary) {
@@ -39,7 +40,7 @@ export const ApiDocs: SwaggerMethodDoc<PhotoController> = {
       }),
       ApiResponse({
         status: 201,
-        type: PhotoResponseDto,
+        type: PhotoListResponseDto,
         isArray: true,
         description: '포토 리스트 조회 성공',
       }),
