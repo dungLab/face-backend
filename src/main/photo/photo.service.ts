@@ -165,9 +165,11 @@ export class PhotoService {
         // TODO: pagination 구현
         totalCount: photos.length,
         // TODO: pagination 구현
-        page: 1,
+        endCursor: 'dflkjie@dlkfjasd',
         // TODO: pagination 구현
-        pageSize: 20,
+        hasNextPage: true,
+        // TODO: pagination 구현
+        pageSize: 10,
       },
     };
   }
