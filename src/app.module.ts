@@ -1,18 +1,18 @@
 import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';
-import { AuthModule } from '@/main/auth/auth.module';
+import { AuthModule } from '@/auth/auth.module';
 import { configuration } from '@/common/config/configuration';
 import { ormconfig } from '@/common/config/ormconfig';
-import { HttpModule } from '@/sub/http/http.module';
-import { PhotoModule } from '@/main/photo/photo.module';
-import { S3Module } from '@/sub/s3/s3.module';
-import { UserModule } from '@/main/user/user.module';
+import { HttpModule } from '@/http/http.module';
+import { PhotoModule } from '@/photo/photo.module';
+import { S3Module } from '@/s3/s3.module';
+import { UserModule } from '@/user/user.module';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { FileModule } from './sub/file/file.module';
-import { EvaluationModule } from './main/evaluation/evaluation.module';
-import { LogModule } from './sub/log/log.module';
+import { FileModule } from './file/file.module';
+import { EvaluationModule } from './evaluation/evaluation.module';
+import { LogModule } from './log/log.module';
 import { LoggerMiddleware } from '@/common/middlewares/logger.middleware';
 @Module({
   imports: [
