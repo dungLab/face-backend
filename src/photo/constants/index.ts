@@ -1,3 +1,8 @@
+export enum EPhotoStatus {
+  EVALUATING = '평가중',
+  EVALUATED = '평가완료',
+}
+
 export const PHOTO_SPAN_LIST = [
   // 30분
   1_800_000,

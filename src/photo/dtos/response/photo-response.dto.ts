@@ -1,3 +1,4 @@
+import { EPhotoStatus } from '@/photo/constants';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class PhotoResponseDto {
@@ -15,6 +16,12 @@ export class PhotoResponseDto {
     description: '사진 설명',
   })
   description: string;
+
+  @ApiProperty({
+    description: '사진 상태(평가중, 평가완료)',
+    enum: EPhotoStatus,
+  })
+  status: EPhotoStatus;
 
   @ApiProperty({
     description: '평가 만료 기간',

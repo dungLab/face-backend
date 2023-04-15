@@ -14,7 +14,7 @@ import * as _ from 'lodash';
 import { PhotoEntity } from '@/photo/entities/photo.entity';
 import { PhotoHashTagEntity } from '@/photo/entities/photo-hashtag.entity';
 import { FileRepository } from '@/file/repositories/file.repository';
-import { PHOTO_SPAN_LIST } from '@/photo/constants';
+import { EPhotoStatus, PHOTO_SPAN_LIST } from '@/photo/constants';
 import { PhotoCreateInfoResponseDto } from '@/photo/dtos/response/photo-create-info-response.dto';
 import { EvaluationRepository } from '@/evaluation/repositories/evaluation.repository';
 import { PhotoListResponseDto } from '@/photo/dtos/response/photo-list-response.dto';
@@ -135,10 +135,16 @@ export class PhotoService {
         const { likePercentage, viewCount, likeCount, hateCount } =
           await this._getPhotoReactionInfo(_d);
 
+        const photoStatus =
+          _d.expiredAt > new Date()
+            ? EPhotoStatus.EVALUATING
+            : EPhotoStatus.EVALUATED;
+
         return Builder(PhotoResponseDto)
           .id(_d.id)
           .url(_d.file.url)
           .description(_d.description)
+          .status(photoStatus)
           .expiredAt(getDateFormat(_d.expiredAt))
           .createdAt(getDateFormat(_d.createdAt))
           .hashTags(_d.photoHashTags.map((__d) => __d.hashTag.name))
@@ -178,10 +184,16 @@ export class PhotoService {
     const { likePercentage, viewCount, likeCount, hateCount } =
       await this._getPhotoReactionInfo(foundPhotoEntity);
 
+    const photoStatus =
+      foundPhotoEntity.expiredAt > new Date()
+        ? EPhotoStatus.EVALUATING
+        : EPhotoStatus.EVALUATED;
+
     return Builder(PhotoResponseDto)
       .id(foundPhotoEntity.id)
       .url(foundPhotoEntity.file.url)
       .description(foundPhotoEntity.description)
+      .status(photoStatus)
       .expiredAt(getDateFormat(foundPhotoEntity.expiredAt))
       .createdAt(getDateFormat(foundPhotoEntity.createdAt))
       .hashTags(foundPhotoEntity.photoHashTags.map((_d) => _d.hashTag.name))

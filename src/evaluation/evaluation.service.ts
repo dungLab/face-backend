@@ -11,6 +11,7 @@ import { UserEntity } from '@/user/entities/user.entity';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { Builder } from 'builder-pattern';
 import { PaginationRequestDto } from '@/common/dtos/request/pagination-request.dto';
+import { EPhotoStatus } from '@/photo/constants';
 
 @Injectable()
 export class EvaluationService {
@@ -50,10 +51,16 @@ export class EvaluationService {
             : [];
 
         return foundDetailPhotoEntities.map((foundDetailPhotoEntity) => {
+          const photoStatus =
+            foundDetailPhotoEntity.expiredAt > new Date()
+              ? EPhotoStatus.EVALUATING
+              : EPhotoStatus.EVALUATED;
+
           return Builder(EvaluationResponseDto)
             .id(foundDetailPhotoEntity.id)
             .url(foundDetailPhotoEntity.file.url)
             .description(foundDetailPhotoEntity.description)
+            .status(photoStatus)
             .expiredAt(getDateFormat(foundDetailPhotoEntity.expiredAt))
             .createdAt(getDateFormat(foundDetailPhotoEntity.createdAt))
             .hashTags(
