@@ -17,7 +17,6 @@ import { FileRepository } from '@/file/repositories/file.repository';
 import { PHOTO_SPAN_LIST } from '@/photo/constants';
 import { PhotoCreateInfoResponseDto } from '@/photo/dtos/response/photo-create-info-response.dto';
 import { EvaluationRepository } from '@/evaluation/repositories/evaluation.repository';
-import { UserReseponseDto } from '@/user/dtos/response/user-response.dto';
 import { PhotoListResponseDto } from '@/photo/dtos/response/photo-list-response.dto';
 
 @Injectable()
@@ -141,14 +140,6 @@ export class PhotoService {
           .url(_d.file.url)
           .description(_d.description)
           .expiredAt(getDateFormat(_d.expiredAt))
-          .user(
-            Builder(UserReseponseDto)
-              .id(_d.user.id)
-              .createdAt(getDateFormat(_d.user.createdAt))
-              .email(_d.user.email)
-              .nickName(_d.user.nickName)
-              .build(),
-          )
           .createdAt(getDateFormat(_d.createdAt))
           .hashTags(_d.photoHashTags.map((__d) => __d.hashTag.name))
           .likePercentage(likePercentage)
@@ -192,14 +183,6 @@ export class PhotoService {
       .url(foundPhotoEntity.file.url)
       .description(foundPhotoEntity.description)
       .expiredAt(getDateFormat(foundPhotoEntity.expiredAt))
-      .user(
-        Builder(UserReseponseDto)
-          .id(foundPhotoEntity.user.id)
-          .createdAt(getDateFormat(foundPhotoEntity.user.createdAt))
-          .email(foundPhotoEntity.user.email)
-          .nickName(foundPhotoEntity.user.nickName)
-          .build(),
-      )
       .createdAt(getDateFormat(foundPhotoEntity.createdAt))
       .hashTags(foundPhotoEntity.photoHashTags.map((_d) => _d.hashTag.name))
       .likePercentage(likePercentage)

@@ -10,7 +10,6 @@ import { PhotoRepository } from '@/photo/repositories/photo.repository';
 import { UserEntity } from '@/user/entities/user.entity';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { Builder } from 'builder-pattern';
-import { UserReseponseDto } from '@/user/dtos/response/user-response.dto';
 import { PaginationRequestDto } from '@/common/dtos/request/pagination-request.dto';
 
 @Injectable()
@@ -56,14 +55,6 @@ export class EvaluationService {
             .url(foundDetailPhotoEntity.file.url)
             .description(foundDetailPhotoEntity.description)
             .expiredAt(getDateFormat(foundDetailPhotoEntity.expiredAt))
-            .user(
-              Builder(UserReseponseDto)
-                .id(foundDetailPhotoEntity.user.id)
-                .createdAt(getDateFormat(foundDetailPhotoEntity.user.createdAt))
-                .email(foundDetailPhotoEntity.user.email)
-                .nickName(foundDetailPhotoEntity.user.nickName)
-                .build(),
-            )
             .createdAt(getDateFormat(foundDetailPhotoEntity.createdAt))
             .hashTags(
               foundDetailPhotoEntity.photoHashTags.map((_d) => _d.hashTag.name),

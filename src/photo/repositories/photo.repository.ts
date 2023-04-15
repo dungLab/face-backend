@@ -32,7 +32,6 @@ export class PhotoRepository extends Repository<PhotoEntity> {
   async findManyCursorByUserId(userId: number) {
     return await this._getBaseQueryBuilder()
       .withDeleted()
-      .leftJoinAndSelect('photo.user', 'user')
       .leftJoinAndSelect('photo.file', 'file')
       .leftJoinAndSelect('photo.photoHashTags', 'photoHashTags')
       .leftJoinAndSelect('photoHashTags.hashTag', 'hashTag')
@@ -47,7 +46,6 @@ export class PhotoRepository extends Repository<PhotoEntity> {
   async findOneById(id: number) {
     return await this._getBaseQueryBuilder()
       .withDeleted()
-      .leftJoinAndSelect('photo.user', 'user')
       .leftJoinAndSelect('photo.file', 'file')
       .leftJoinAndSelect('photo.photoHashTags', 'photoHashTags')
       .leftJoinAndSelect('photoHashTags.hashTag', 'hashTag')
@@ -61,7 +59,6 @@ export class PhotoRepository extends Repository<PhotoEntity> {
   async findManyByIds(ids: number[]) {
     return await this._getBaseQueryBuilder()
       .withDeleted()
-      .leftJoinAndSelect('photo.user', 'user')
       .leftJoinAndSelect('photo.file', 'file')
       .leftJoinAndSelect('photo.photoHashTags', 'photoHashTags')
       .leftJoinAndSelect('photoHashTags.hashTag', 'hashTag')
