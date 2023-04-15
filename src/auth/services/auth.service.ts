@@ -69,7 +69,7 @@ export class AuthService {
     );
 
     return this.jwtService.sign(payload, {
-      expiresIn,
+      // expiresIn,
     });
   }
 
@@ -86,7 +86,7 @@ export class AuthService {
     );
 
     return this.jwtService.sign(payload, {
-      expiresIn,
+      // expiresIn,
     });
   }
 }
