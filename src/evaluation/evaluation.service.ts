@@ -26,7 +26,7 @@ export class EvaluationService {
     user: UserEntity,
     targetType: EvaluationTargetType,
     query: PaginationRequestDto,
-  ): Promise<EvaluationResponseDto[] | null> {
+  ): Promise<EvaluationResponseDto[]> {
     switch (targetType) {
       case EvaluationTargetType.ALL: {
         // 1. 평가할 photoEntities select
@@ -37,7 +37,7 @@ export class EvaluationService {
           );
 
         if (foundSimplePhotoEntities.length === 0) {
-          return null;
+          return [];
         }
 
         const photoIdsForEvaluation = foundSimplePhotoEntities.map(
