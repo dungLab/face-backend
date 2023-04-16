@@ -71,8 +71,8 @@ export class S3Service {
 
   private _generateFolderPath(folderType: FolderType) {
     return process.env.NODE_ENV === 'production'
-      ? `${folderType}/production`
-      : `${folderType}/development`;
+      ? `${folderType}/production/origin`
+      : `${folderType}/development/origin`;
   }
 
   private _getUrlFromBucket(s3Bucket: S3BucketType, fileName: string) {
