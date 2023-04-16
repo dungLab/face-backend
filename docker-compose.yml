@@ -11,9 +11,12 @@ services:
       MYSQL_USER: dung
       MYSQL_PASSWORD: 1234
       TZ: Asia/Seoul
-    volumes:
-      - ./db/conf.d:/etc/mysql/conf.d --user 1000
-      - ./db/data:/var/lib/mysql --user 1000
-      - ./db/initdb.d:/docker-entrypoint-initdb.d --user 1000
+      LANG: C.UTF-8
+    command:
+      - --character-set-server=utf8 
+      - --collation-server=utf8_general_ci
     ports:
       - "3306:3306"
+    platform: linux/amd64
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
