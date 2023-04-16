@@ -9,8 +9,8 @@ export const ormconfig = (
     // base
     type: 'mysql',
     synchronize: false,
-    retryAttempts: 0,
-    retryDelay: 300,
+    retryAttempts: 10,
+    retryDelay: 1000,
     logging:
       process.env.NODE_ENV === 'production'
         ? ['warn', 'error']
