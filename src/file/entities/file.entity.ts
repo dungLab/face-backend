@@ -5,12 +5,10 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { UserEntity } from '@/user/entities/user.entity';
 import { ProfileEntity } from '@/user/entities/profile.entity';
 
 @Entity('FILE')
