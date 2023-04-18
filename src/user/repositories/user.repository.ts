@@ -30,7 +30,7 @@ export class UserRepository extends Repository<UserEntity> {
     return await this._getBaseQueryBuilder(queryRunner)
       .withDeleted()
       .leftJoinAndSelect('user.profile', 'profile')
-      .leftJoinAndSelect('user.file', 'file')
+      .leftJoinAndSelect('profile.file', 'file')
       .where('user.id = :id', {
         id,
       })

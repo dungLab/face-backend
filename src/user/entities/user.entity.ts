@@ -1,7 +1,6 @@
 import { OAuthServiceType } from '@/auth/constants';
 import { EvaluationEntity } from '@/evaluation/entities/evaluation.entity';
 import { PhotoEntity } from '@/photo/entities/photo.entity';
-import { FileEntity } from '@/file/entities/file.entity';
 import {
   Column,
   CreateDateColumn,
@@ -57,9 +56,6 @@ export class UserEntity {
 
   @OneToMany(() => EvaluationEntity, (evaluation) => evaluation.user)
   evaluations: EvaluationEntity[];
-
-  @OneToOne(() => FileEntity, (file) => file.user)
-  file: FileEntity;
 
   @OneToOne(() => ProfileEntity, (profile) => profile.user)
   profile: ProfileEntity;

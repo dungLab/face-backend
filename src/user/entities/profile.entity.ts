@@ -1,3 +1,4 @@
+import { FileEntity } from '@/file/entities/file.entity';
 import { UserEntity } from '@/user/entities/user.entity';
 import {
   Column,
@@ -28,6 +29,15 @@ export class ProfileEntity {
   userId: number;
 
   @Column({
+    name: 'file_id',
+    type: 'int',
+    unsigned: true,
+    comment: 'file id',
+    nullable: true,
+  })
+  fileId?: number | null;
+
+  @Column({
     name: 'nickname',
     type: 'varchar',
     comment: '회원가입 시, 랜덤하게 생성',
@@ -52,13 +62,6 @@ export class ProfileEntity {
   })
   link?: string | null;
 
-  @OneToOne(() => UserEntity, (user) => user.profile)
-  @JoinColumn({
-    name: 'user_id',
-    referencedColumnName: 'id',
-  })
-  user: UserEntity;
-
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
@@ -67,4 +70,18 @@ export class ProfileEntity {
 
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt: Date;
+
+  @OneToOne(() => UserEntity, (user) => user.profile)
+  @JoinColumn({
+    name: 'user_id',
+    referencedColumnName: 'id',
+  })
+  user: UserEntity;
+
+  @OneToOne(() => FileEntity, (file) => file.profile)
+  @JoinColumn({
+    name: 'file_id',
+    referencedColumnName: 'id',
+  })
+  file: FileEntity;
 }

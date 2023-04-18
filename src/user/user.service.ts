@@ -89,7 +89,7 @@ export class UserService {
       .nickName(foundUserEntity.profile.nickName)
       .introduction(foundUserEntity.profile.introduction)
       .link(foundUserEntity.profile.link)
-      .url(foundUserEntity.file?.url ?? null)
+      .url(foundUserEntity.profile.file?.url ?? null)
       .createdAt(getDateFormat(foundUserEntity.createdAt))
       .build();
   }
@@ -102,23 +102,7 @@ export class UserService {
     await queryRunner.startTransaction();
 
     try {
-      if (!fileId) {
-        // 없애려면
-        const foundFileEntity = await this.fileRepository.findByUserId(
-          user.id,
-          queryRunner,
-        );
-
-        if (foundFileEntity) {
-          const updateFile = this.fileRepository.create({
-            ...foundFileEntity,
-            userId: null,
-          });
-
-          await queryRunner.manager.save(updateFile);
-        }
-      } else {
-        //추가하려면
+      if (fileId) {
         const foundFileEntity = await this.fileRepository.findById(
           fileId,
           queryRunner,
@@ -130,13 +114,6 @@ export class UserService {
             code: -1,
           });
         }
-
-        const updateFile = this.fileRepository.create({
-          ...foundFileEntity,
-          userId: user.id,
-        });
-
-        await queryRunner.manager.save(updateFile);
       }
 
       // user처리
@@ -157,6 +134,7 @@ export class UserService {
         nickName,
         introduction,
         link,
+        fileId,
       });
 
       await queryRunner.manager.save(updatedProfile);

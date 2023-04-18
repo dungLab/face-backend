@@ -11,6 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UserEntity } from '@/user/entities/user.entity';
+import { ProfileEntity } from '@/user/entities/profile.entity';
 
 @Entity('FILE')
 export class FileEntity {
@@ -22,15 +23,6 @@ export class FileEntity {
 
   @Column({ name: 'url', type: 'varchar', comment: 'obj url' })
   url: string;
-
-  @Column({
-    name: 'user_id',
-    type: 'int',
-    unsigned: true,
-    comment: 'user id',
-    nullable: true,
-  })
-  userId?: number | null;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -44,11 +36,6 @@ export class FileEntity {
   @OneToOne(() => PhotoEntity, (photo) => photo.file)
   photo: PhotoEntity;
 
-  @OneToOne(() => UserEntity, (user) => user.file)
-  @JoinColumn({
-    name: 'user_id',
-    referencedColumnName: 'id',
-    foreignKeyConstraintName: 'fk_user_id',
-  })
-  user: UserEntity;
+  @OneToOne(() => ProfileEntity, (profile) => profile.file)
+  profile: ProfileEntity;
 }
