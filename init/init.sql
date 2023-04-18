@@ -1,3 +1,4 @@
+-- ddls
 create table face.HASHTAG
 (
     id         int unsigned auto_increment
@@ -117,3 +118,19 @@ create index idx_email_deleted_at
 create index idx_email_type_deleted_at
     on face.USER (email, type, deleted_at);
 
+
+
+-- dmls
+-- users
+insert into face.USER (id, email, nickname, type, refresh_token, created_at, updated_at, deleted_at, introduction, link)
+values  (1, 'shkorea1004@gmail.com', '부드러운참돔887', 'kakao', null, '2023-02-24 22:47:09.542046', '2023-02-24 22:47:09.542046', null, null, null),
+        (2, 'yjs3819@naver.com', '멋진호랑이132', 'kakao', null, '2023-02-24 23:00:10.302156', '2023-02-24 23:00:10.302156', null, null, null),
+        (3, 'test1@naver.com', '귀여운어드민111', 'kakao', null, '2023-03-19 15:28:01.408093', '2023-03-19 15:28:01.408093', null, null, null),
+        (4, 'test2@naver.com', '귀여운어드민112', 'kakao', null, '2023-03-19 15:28:01.408093', '2023-03-19 15:28:01.408093', null, null, null),
+        (5, 'test3@naver.com', '귀여운어드민113', 'kakao', null, '2023-03-19 15:28:01.408093', '2023-03-19 15:28:01.408093', null, null, null),
+        (6, 'test4@naver.com', '귀여운어드민114', 'kakao', null, '2023-03-19 15:28:01.408093', '2023-03-19 15:28:01.408093', null, null, null),
+        (7, 'test5@naver.com', '귀여운어드민115', 'kakao', null, '2023-03-19 15:28:01.408093', '2023-04-15 16:30:46.488457', null, null, 'www.naver.comwww.naver.comwww.naver.comwww.naver.comwww.naver.comwww.naver.comwww.naver.comwww.naver.comwww.naver.comwww.naver.comwww.naver.comwww.naver.comwww.naver.comwww.naver.com'),
+        (8, 'test6@naver.com', '귀여운어드민116', 'kakao', null, '2023-03-19 15:28:01.408093', '2023-03-19 15:28:01.408093', null, null, null),
+        (9, 'test7@naver.com', '귀여운어드민117', 'kakao', null, '2023-03-19 15:28:01.408093', '2023-03-19 15:28:01.408093', null, null, null),
+        (10, 'test8@naver.com', '귀여운어드민118', 'kakao', null, '2023-03-19 15:28:01.408093', '2023-03-19 15:28:01.408093', null, null, null),
+        (11, 'test9@naver.com', '귀여운어드민119', 'kakao', null, '2023-03-19 15:28:01.408093', '2023-03-19 15:28:01.408093', null, null, null);
