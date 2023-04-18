@@ -8,9 +8,7 @@ import { AbstractOAuthService } from '@/auth/services/abstract-oauth-service';
 import { JwtPayload } from '@/auth/types';
 import { ErrorResponse } from '@/common/error-response.exception';
 import { UserEntity } from '@/user/entities/user.entity';
-import { UserRepository } from '@/user/repositories/user.repository';
 import { UserService } from '@/user/user.service';
-import { generateRandomNickName } from '@/user/utils';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -25,9 +23,6 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly userService: UserService,
-
-    // repositories
-    private readonly userRepository: UserRepository,
   ) {}
 
   async kakaoLogin(code: string): Promise<LoginResponseDto> {
@@ -39,11 +34,10 @@ export class AuthService {
 
     if (!user) {
       //회원가입
-      user = await this.userRepository.save({
-        email: kakaoUserInfo.email,
-        nickName: generateRandomNickName(),
-        type: OAuthServiceType.KAKAO,
-      });
+      user = await this.userService.createUser(
+        kakaoUserInfo.email,
+        OAuthServiceType.KAKAO,
+      );
     }
 
     return Builder(LoginResponseDto)

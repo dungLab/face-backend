@@ -13,6 +13,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ProfileEntity } from '@/user/entities/profile.entity';
 
 @Entity('USER')
 @Index('idx_email_deleted_at', ['email', 'deletedAt'])
@@ -30,31 +31,6 @@ export class UserEntity {
     comment: '이메일',
   })
   email: string;
-
-  @Column({
-    name: 'nickname',
-    type: 'varchar',
-    comment: '회원가입 시, 랜덤하게 생성',
-  })
-  nickName: string;
-
-  @Column({
-    name: 'introduction',
-    type: 'varchar',
-    comment: '자기소개 내용',
-    length: 512,
-    nullable: true,
-  })
-  introduction?: string | null;
-
-  @Column({
-    name: 'link',
-    type: 'varchar',
-    comment: '자기 소개 링크',
-    length: 512,
-    nullable: true,
-  })
-  link?: string | null;
 
   @Column({
     name: 'type',
@@ -84,4 +60,7 @@ export class UserEntity {
 
   @OneToOne(() => FileEntity, (file) => file.user)
   file: FileEntity;
+
+  @OneToOne(() => ProfileEntity, (profile) => profile.user)
+  profile: ProfileEntity;
 }

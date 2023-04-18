@@ -18,6 +18,7 @@ export class UserRepository extends Repository<UserEntity> {
   async findById(id: number, queryRunner?: QueryRunner) {
     return await this._getBaseQueryBuilder(queryRunner)
       .withDeleted()
+      .leftJoinAndSelect('user.profile', 'profile')
       .where('user.id = :id', {
         id,
       })
@@ -28,6 +29,7 @@ export class UserRepository extends Repository<UserEntity> {
   async findWithFileById(id: number, queryRunner?: QueryRunner) {
     return await this._getBaseQueryBuilder(queryRunner)
       .withDeleted()
+      .leftJoinAndSelect('user.profile', 'profile')
       .leftJoinAndSelect('user.file', 'file')
       .where('user.id = :id', {
         id,
@@ -39,6 +41,7 @@ export class UserRepository extends Repository<UserEntity> {
   async findByEmail(email: string) {
     return await this._getBaseQueryBuilder()
       .withDeleted()
+      .leftJoinAndSelect('user.profile', 'profile')
       .where('user.email = :email', {
         email,
       })
@@ -49,6 +52,7 @@ export class UserRepository extends Repository<UserEntity> {
   async findByEmailAndType(email: string, type: OAuthServiceType) {
     return await this._getBaseQueryBuilder()
       .withDeleted()
+      .leftJoinAndSelect('user.profile', 'profile')
       .where('user.email = :email', {
         email,
       })
