@@ -50,7 +50,8 @@ export class PhotoService {
       });
     }
 
-    const foundPhotoEntity = this.photoRepository.findOne({
+    const foundPhotoEntity = await this.photoRepository.findOne({
+      withDeleted: true,
       where: { fileId },
     });
 
