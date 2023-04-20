@@ -50,6 +50,17 @@ export class PhotoService {
       });
     }
 
+    const foundPhotoEntity = this.photoRepository.findOne({
+      where: { fileId },
+    });
+
+    if (foundPhotoEntity) {
+      throw new ErrorResponse(HttpStatus.CONFLICT, {
+        message: '이미 해당 파일의 포토가 존재합니다.',
+        code: -1,
+      });
+    }
+
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
 
