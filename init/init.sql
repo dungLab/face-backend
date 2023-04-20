@@ -1,10 +1,22 @@
 create table face.FILE
 (
-    id         int unsigned auto_increment primary key,
+    id         int unsigned auto_increment
+        primary key,
     type       varchar(255)                             not null comment '파일 타입 (image, docs, ..)',
     created_at datetime(6) default CURRENT_TIMESTAMP(6) not null,
     updated_at datetime(6) default CURRENT_TIMESTAMP(6) not null on update CURRENT_TIMESTAMP(6),
     deleted_at datetime(6)                              null
+);
+
+create table face.FILE_META
+(
+    id      int unsigned auto_increment
+        primary key,
+    file_id int unsigned not null comment 'file id',
+    `key`   varchar(255) not null,
+    value   varchar(255) not null,
+    constraint FK_503c101cb782aa28516b98852ed
+        foreign key (file_id) references face.FILE (id)
 );
 
 create table face.HASHTAG
@@ -105,16 +117,22 @@ create table face.PROFILE
     id           int unsigned auto_increment
         primary key,
     user_id      int unsigned                             not null comment 'user id',
-    file_id      int unsigned                             null,
+    file_id      int unsigned                             null comment 'file id',
     nickname     varchar(255)                             not null comment '회원가입 시, 랜덤하게 생성',
     introduction varchar(512)                             null comment '자기소개 내용',
     link         varchar(512)                             null comment '자기 소개 링크',
     created_at   datetime(6) default CURRENT_TIMESTAMP(6) not null,
     updated_at   datetime(6) default CURRENT_TIMESTAMP(6) not null on update CURRENT_TIMESTAMP(6),
     deleted_at   datetime(6)                              null,
+    constraint REL_63ead8e544bc9481e222cd4d7f
+        unique (file_id),
+    constraint REL_fa95aed038d2e33e2df78f86c1
+        unique (user_id),
     constraint uk_user_id
         unique (user_id),
-    constraint PROFILE_ibfk_1
+    constraint FK_63ead8e544bc9481e222cd4d7fb
+        foreign key (file_id) references face.FILE (id),
+    constraint FK_fa95aed038d2e33e2df78f86c1f
         foreign key (user_id) references face.USER (id)
 );
 
@@ -123,7 +141,6 @@ create index idx_email_deleted_at
 
 create index idx_email_type_deleted_at
     on face.USER (email, type, deleted_at);
-
 
 -- dmls
 -- users
