@@ -12,6 +12,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { Builder } from 'builder-pattern';
 import { PaginationRequestDto } from '@/common/dtos/request/pagination-request.dto';
 import { EPhotoStatus } from '@/photo/constants';
+import { FileReponseDto } from '@/file/dtos/request/file-response.dto';
 
 @Injectable()
 export class EvaluationService {
@@ -58,7 +59,28 @@ export class EvaluationService {
 
           return Builder(EvaluationResponseDto)
             .id(foundDetailPhotoEntity.id)
-            .url(foundDetailPhotoEntity.file.url)
+            .image(
+              Builder(FileReponseDto)
+                .id(foundDetailPhotoEntity.file.id)
+                .type(foundDetailPhotoEntity.file.type)
+                .originalUrl(
+                  foundDetailPhotoEntity.file.metas.find(
+                    (d) => d.key === 'origin',
+                  ).value,
+                )
+                .w256(
+                  foundDetailPhotoEntity.file.metas.find(
+                    (d) => d.key === 'w_256',
+                  ).value,
+                )
+                .w1024(
+                  foundDetailPhotoEntity.file.metas.find(
+                    (d) => d.key === 'w_1024',
+                  ).value,
+                )
+                .createdAt(getDateFormat(foundDetailPhotoEntity.file.createdAt))
+                .build(),
+            )
             .description(foundDetailPhotoEntity.description)
             .status(photoStatus)
             .expiredAt(getDateFormat(foundDetailPhotoEntity.expiredAt))

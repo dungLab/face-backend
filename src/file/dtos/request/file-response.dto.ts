@@ -8,9 +8,19 @@ export class FileReponseDto {
   id: number;
 
   @ApiProperty({
-    description: '파일 s3 url',
+    description: 'origin s3 url',
   })
-  url: string;
+  originalUrl: string;
+
+  @ApiProperty({
+    description: 'width, height 256 resized s3 url',
+  })
+  w256: string;
+
+  @ApiProperty({
+    description: 'width, height 1024 resized s3 url',
+  })
+  w1024: string;
 
   @ApiProperty({
     description: 'file type (image, profile ..)',

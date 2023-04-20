@@ -5,11 +5,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { ProfileEntity } from '@/user/entities/profile.entity';
+import { FileMetaEntity } from '@/file/entities/file-meta.entity';
 
 @Entity('FILE')
 export class FileEntity {
@@ -18,9 +20,6 @@ export class FileEntity {
 
   @Column({ name: 'type', comment: '파일 타입 (image, docs, ..)' })
   type: FileType;
-
-  @Column({ name: 'url', type: 'varchar', comment: 'obj url' })
-  url: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -36,4 +35,7 @@ export class FileEntity {
 
   @OneToOne(() => ProfileEntity, (profile) => profile.file)
   profile: ProfileEntity;
+
+  @OneToMany(() => FileMetaEntity, (meta) => meta.file)
+  metas: FileMetaEntity[];
 }

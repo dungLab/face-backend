@@ -33,6 +33,7 @@ export class PhotoRepository extends Repository<PhotoEntity> {
     return await this._getBaseQueryBuilder()
       .withDeleted()
       .leftJoinAndSelect('photo.file', 'file')
+      .leftJoinAndSelect('file.metas', 'metas')
       .leftJoinAndSelect('photo.photoHashTags', 'photoHashTags')
       .leftJoinAndSelect('photoHashTags.hashTag', 'hashTag')
       .where('photo.userId = :userId', {
@@ -47,6 +48,7 @@ export class PhotoRepository extends Repository<PhotoEntity> {
     return await this._getBaseQueryBuilder()
       .withDeleted()
       .leftJoinAndSelect('photo.file', 'file')
+      .leftJoinAndSelect('file.metas', 'metas')
       .leftJoinAndSelect('photo.photoHashTags', 'photoHashTags')
       .leftJoinAndSelect('photoHashTags.hashTag', 'hashTag')
       .where('photo.id = :id', {
@@ -60,6 +62,7 @@ export class PhotoRepository extends Repository<PhotoEntity> {
     return await this._getBaseQueryBuilder()
       .withDeleted()
       .leftJoinAndSelect('photo.file', 'file')
+      .leftJoinAndSelect('file.metas', 'metas')
       .leftJoinAndSelect('photo.photoHashTags', 'photoHashTags')
       .leftJoinAndSelect('photoHashTags.hashTag', 'hashTag')
       .where('photo.id IN (:...ids)', {

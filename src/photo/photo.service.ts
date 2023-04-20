@@ -18,6 +18,7 @@ import { EPhotoStatus, PHOTO_SPAN_LIST } from '@/photo/constants';
 import { PhotoCreateInfoResponseDto } from '@/photo/dtos/response/photo-create-info-response.dto';
 import { EvaluationRepository } from '@/evaluation/repositories/evaluation.repository';
 import { PhotoListResponseDto } from '@/photo/dtos/response/photo-list-response.dto';
+import { FileReponseDto } from '@/file/dtos/request/file-response.dto';
 
 @Injectable()
 export class PhotoService {
@@ -142,7 +143,16 @@ export class PhotoService {
 
         return Builder(PhotoResponseDto)
           .id(_d.id)
-          .url(_d.file.url)
+          .image(
+            Builder(FileReponseDto)
+              .id(_d.file.id)
+              .type(_d.file.type)
+              .originalUrl(_d.file.metas.find((d) => d.key === 'origin').value)
+              .w256(_d.file.metas.find((d) => d.key === 'w_256').value)
+              .w1024(_d.file.metas.find((d) => d.key === 'w_1024').value)
+              .createdAt(getDateFormat(_d.file.createdAt))
+              .build(),
+          )
           .description(_d.description)
           .status(photoStatus)
           .expiredAt(getDateFormat(_d.expiredAt))
@@ -191,7 +201,22 @@ export class PhotoService {
 
     return Builder(PhotoResponseDto)
       .id(foundPhotoEntity.id)
-      .url(foundPhotoEntity.file.url)
+      .image(
+        Builder(FileReponseDto)
+          .id(foundPhotoEntity.file.id)
+          .type(foundPhotoEntity.file.type)
+          .originalUrl(
+            foundPhotoEntity.file.metas.find((d) => d.key === 'origin').value,
+          )
+          .w256(
+            foundPhotoEntity.file.metas.find((d) => d.key === 'w_256').value,
+          )
+          .w1024(
+            foundPhotoEntity.file.metas.find((d) => d.key === 'w_1024').value,
+          )
+          .createdAt(getDateFormat(foundPhotoEntity.file.createdAt))
+          .build(),
+      )
       .description(foundPhotoEntity.description)
       .status(photoStatus)
       .expiredAt(getDateFormat(foundPhotoEntity.expiredAt))

@@ -1,3 +1,4 @@
+import { FileReponseDto } from '@/file/dtos/request/file-response.dto';
 import { EPhotoStatus } from '@/photo/constants';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -8,9 +9,10 @@ export class PhotoResponseDto {
   id: number;
 
   @ApiProperty({
-    description: '사진 s3 url',
+    type: FileReponseDto,
+    description: '파일 정보',
   })
-  url: string;
+  image: FileReponseDto;
 
   @ApiProperty({
     description: '사진 설명',

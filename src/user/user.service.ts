@@ -11,6 +11,7 @@ import { ErrorResponse } from '@/common/error-response.exception';
 import { DataSource } from 'typeorm';
 import { ProfileRepository } from '@/user/repositories/profile.repository';
 import { generateRandomNickName } from '@/user/utils';
+import { FileReponseDto } from '@/file/dtos/request/file-response.dto';
 
 @Injectable()
 export class UserService {
@@ -89,7 +90,30 @@ export class UserService {
       .nickName(foundUserEntity.profile.nickName)
       .introduction(foundUserEntity.profile.introduction)
       .link(foundUserEntity.profile.link)
-      .url(foundUserEntity.profile.file?.url ?? null)
+      .image(
+        foundUserEntity.profile.file
+          ? Builder(FileReponseDto)
+              .id(foundUserEntity.profile.file.id)
+              .type(foundUserEntity.profile.file.type)
+              .originalUrl(
+                foundUserEntity.profile.file.metas.find(
+                  (d) => d.key === 'origin',
+                ).value,
+              )
+              .w256(
+                foundUserEntity.profile.file.metas.find(
+                  (d) => d.key === 'w_256',
+                ).value,
+              )
+              .w1024(
+                foundUserEntity.profile.file.metas.find(
+                  (d) => d.key === 'w_1024',
+                ).value,
+              )
+              .createdAt(getDateFormat(foundUserEntity.profile.file.createdAt))
+              .build()
+          : null,
+      )
       .createdAt(getDateFormat(foundUserEntity.createdAt))
       .build();
   }

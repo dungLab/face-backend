@@ -31,6 +31,7 @@ export class UserRepository extends Repository<UserEntity> {
       .withDeleted()
       .leftJoinAndSelect('user.profile', 'profile')
       .leftJoinAndSelect('profile.file', 'file')
+      .leftJoinAndSelect('file.metas', 'metas')
       .where('user.id = :id', {
         id,
       })

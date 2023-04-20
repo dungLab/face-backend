@@ -1,3 +1,4 @@
+import { FileReponseDto } from '@/file/dtos/request/file-response.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UserReseponseDto {
@@ -27,9 +28,11 @@ export class UserReseponseDto {
   link: string | null;
 
   @ApiProperty({
-    description: '대표 프로필 url',
+    type: FileReponseDto,
+    description: '파일 정보',
+    nullable: true,
   })
-  url: string | null;
+  image: FileReponseDto | null;
 
   @ApiProperty({
     description: '유저 가입 날짜',
