@@ -1,13 +1,14 @@
 import { CustomMysqlTypeOrmModuleOptionsType } from '@/common/types/ormconfig.type';
 import { ConfigService } from '@nestjs/config';
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { join } from 'path';
 
-export const ormconfig = (config: ConfigService): TypeOrmModuleOptions => {
+export const ormconfig = (
+  config: ConfigService,
+): CustomMysqlTypeOrmModuleOptionsType => {
   return {
     // base
     type: 'mysql',
-    synchronize: true,
+    synchronize: false,
     retryAttempts: 10,
     retryDelay: 1000,
     logging:
