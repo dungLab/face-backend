@@ -78,6 +78,8 @@ export class FileService {
         fileMetaEntities,
       );
 
+      await queryRunner.commitTransaction();
+
       return {
         file: savedFileEntity,
         metas: savedFileMetaEntities,
