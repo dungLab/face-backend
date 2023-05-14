@@ -3,11 +3,11 @@ import {
   OAUTH_SERVICES_INJECT_TOKEN,
 } from '@/auth/constants';
 import { KakaoUserInfoDto } from '@/auth/dtos/kakao-user-info.dto';
+import { RefreshTokenDto } from '@/auth/dtos/request/refresh-token.dto';
 import { LoginResponseDto } from '@/auth/dtos/response/login-response.dto';
 import { AbstractOAuthService } from '@/auth/services/abstract-oauth-service';
 import { JwtPayload } from '@/auth/types';
 import { ErrorResponse } from '@/common/error-response.exception';
-import { UserEntity } from '@/user/entities/user.entity';
 import { UserService } from '@/user/user.service';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -46,8 +46,18 @@ export class AuthService {
       .build();
   }
 
-  refreshToken(user: UserEntity) {
-    return this._generateAccessToken({ ...user });
+  async refreshToken(refreshTokenDto: RefreshTokenDto) {
+    const { refreshToken } = refreshTokenDto;
+    const jwtPayload: JwtPayload = this.jwtService.verify(refreshToken);
+    const foundUser = await this.userService.findById(jwtPayload.id);
+    if (!foundUser) {
+      throw new ErrorResponse(HttpStatus.NOT_FOUND, {
+        message: 'there is no user',
+        code: -1,
+      });
+    }
+
+    return this._generateAccessToken({ ...foundUser });
   }
 
   private _generateAccessToken(payload: JwtPayload): string {
@@ -63,7 +73,7 @@ export class AuthService {
     );
 
     return this.jwtService.sign(payload, {
-      // expiresIn,
+      expiresIn,
     });
   }
 
@@ -80,7 +90,7 @@ export class AuthService {
     );
 
     return this.jwtService.sign(payload, {
-      // expiresIn,
+      expiresIn,
     });
   }
 }

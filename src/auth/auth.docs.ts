@@ -35,7 +35,6 @@ export const ApiDocs: SwaggerMethodDoc<AuthController> = {
   },
   refreshToken(summary) {
     return applyDecorators(
-      ApiBearerAuth('jwt'),
       ApiOperation({
         summary: summary,
         description: 'refreshToken으로 accessToken 재발급',

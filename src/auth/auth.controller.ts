@@ -1,9 +1,7 @@
 import { ApiDocs } from '@/auth/auth.docs';
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
+import { RefreshTokenDto } from '@/auth/dtos/request/refresh-token.dto';
 import { AuthService } from '@/auth/services/auth.service';
-import { User } from '@/auth/user.decorator';
-import { UserEntity } from '@/user/entities/user.entity';
-import { Controller, Get, Post, Query, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -47,11 +45,7 @@ export class AuthController {
 
   @ApiDocs.refreshToken('refreshToken으로 accessToken 재발급')
   @Post('refresh-token')
-  @UseGuards(JwtAuthGuard)
-  refreshToken(@User() user: UserEntity, @Res() res: Response) {
-    const accessToken = this.authService.refreshToken(user);
-    res.cookie('dunglab-accessToken', accessToken);
-
-    return accessToken;
+  refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
+    return this.authService.refreshToken(refreshTokenDto);
   }
 }
