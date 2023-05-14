@@ -1,22 +1,20 @@
+import { AbstractEntity } from '@/common/abstract-entity';
 import { PhotoEntity } from '@/photo/entities/photo.entity';
 import { UserEntity } from '@/user/entities/user.entity';
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 @Index('uk_user_id_photo_id', ['userId', 'photoId'], {
   unique: true,
 })
 @Entity('EVALUATION')
-export class EvaluationEntity {
+export class EvaluationEntity extends AbstractEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;
 
@@ -43,15 +41,6 @@ export class EvaluationEntity {
     comment: '좋아요 여부',
   })
   isGood: boolean;
-
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
-
-  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
-  deletedAt: Date;
 
   //TODO: rename foreignkey index name (fk_photo_id_tmp -> fk_photo_id)
   @ManyToOne(() => PhotoEntity, (photo) => photo.evaluations)

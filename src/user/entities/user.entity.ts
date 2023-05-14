@@ -3,16 +3,14 @@ import { EvaluationEntity } from '@/evaluation/entities/evaluation.entity';
 import { PhotoEntity } from '@/photo/entities/photo.entity';
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   Index,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { ProfileEntity } from '@/user/entities/profile.entity';
+import { AbstractEntity } from '@/common/abstract-entity';
 
 @Entity('USER')
 @Index('idx_email_deleted_at', ['email', 'deletedAt'])
@@ -20,7 +18,7 @@ import { ProfileEntity } from '@/user/entities/profile.entity';
 @Index('uk_email_type', ['email', 'type'], {
   unique: true,
 })
-export class UserEntity {
+export class UserEntity extends AbstractEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;
 
@@ -41,15 +39,6 @@ export class UserEntity {
   // TODO: refreshToken 고정된 문자열의 길이이면 char(length) 로 변경
   @Column({ name: 'refresh_token', type: 'varchar', nullable: true })
   refreshToken?: string | null;
-
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
-
-  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
-  deletedAt: Date;
 
   @OneToMany(() => PhotoEntity, (imageEntity) => imageEntity.user)
   photos: PhotoEntity[];

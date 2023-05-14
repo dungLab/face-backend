@@ -1,22 +1,20 @@
+import { AbstractEntity } from '@/common/abstract-entity';
 import { EvaluationEntity } from '@/evaluation/entities/evaluation.entity';
 import { FileEntity } from '@/file/entities/file.entity';
 import { PhotoHashTagEntity } from '@/photo/entities/photo-hashtag.entity';
 import { UserEntity } from '@/user/entities/user.entity';
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('PHOTO')
-export class PhotoEntity {
+export class PhotoEntity extends AbstractEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;
 
@@ -46,14 +44,14 @@ export class PhotoEntity {
   })
   expiredAt: Date;
 
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  // @CreateDateColumn({ name: 'created_at' })
+  // createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  // @UpdateDateColumn({ name: 'updated_at' })
+  // updatedAt: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
-  deletedAt: Date;
+  // @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  // deletedAt: Date;
 
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.photos)
   @JoinColumn({

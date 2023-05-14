@@ -1,22 +1,20 @@
+import { AbstractEntity } from '@/common/abstract-entity';
 import { FileEntity } from '@/file/entities/file.entity';
 import { UserEntity } from '@/user/entities/user.entity';
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   Index,
   JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('PROFILE')
 @Index('uk_user_id', ['userId'], {
   unique: true,
 })
-export class ProfileEntity {
+export class ProfileEntity extends AbstractEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;
 
@@ -61,15 +59,6 @@ export class ProfileEntity {
     nullable: true,
   })
   link?: string | null;
-
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
-
-  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
-  deletedAt: Date;
 
   @OneToOne(() => UserEntity, (user) => user.profile)
   @JoinColumn({

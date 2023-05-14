@@ -1,18 +1,16 @@
+import { AbstractEntity } from '@/common/abstract-entity';
 import { HashTagEntity } from '@/photo/entities/hashtag.entity';
 import { PhotoEntity } from '@/photo/entities/photo.entity';
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('PHOTO-HASHTAG')
-export class PhotoHashTagEntity {
+export class PhotoHashTagEntity extends AbstractEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;
 
@@ -31,15 +29,6 @@ export class PhotoHashTagEntity {
     comment: 'photo fk',
   })
   photoId: number;
-
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
-
-  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
-  deletedAt: Date;
 
   @ManyToOne(() => PhotoEntity, (photo) => photo.photoHashTags)
   @JoinColumn({

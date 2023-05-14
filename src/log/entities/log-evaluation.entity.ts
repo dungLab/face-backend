@@ -1,9 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('LOG-EVALUATION')
 export class LogEvaluationEntity {
@@ -43,6 +38,11 @@ export class LogEvaluationEntity {
   })
   isGet: boolean;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @Column({
+    name: 'created_at',
+    type: 'timestamp',
+    precision: 6,
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
   createdAt: Date;
 }
