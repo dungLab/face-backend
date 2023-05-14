@@ -10,17 +10,12 @@ export class FileReponseDto {
   @ApiProperty({
     description: 'origin s3 url',
   })
-  originalUrl: string;
+  url: string;
 
   @ApiProperty({
-    description: 'width, height 256 resized s3 url',
+    description: 'public id',
   })
-  w256: string;
-
-  @ApiProperty({
-    description: 'width, height 1024 resized s3 url',
-  })
-  w1024: string;
+  publicId: string;
 
   @ApiProperty({
     description: 'file type (image, profile ..)',

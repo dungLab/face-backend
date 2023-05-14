@@ -12,6 +12,7 @@ import { DataSource } from 'typeorm';
 import { ProfileRepository } from '@/user/repositories/profile.repository';
 import { generateRandomNickName } from '@/user/utils';
 import { FileReponseDto } from '@/file/dtos/request/file-response.dto';
+import { FileMetaType } from '@/file/constants';
 
 @Injectable()
 export class UserService {
@@ -95,19 +96,14 @@ export class UserService {
           ? Builder(FileReponseDto)
               .id(foundUserEntity.profile.file.id)
               .type(foundUserEntity.profile.file.type)
-              .originalUrl(
+              .url(
                 foundUserEntity.profile.file.metas.find(
-                  (d) => d.key === 'origin',
+                  (d) => d.key === FileMetaType.URL,
                 ).value,
               )
-              .w256(
+              .publicId(
                 foundUserEntity.profile.file.metas.find(
-                  (d) => d.key === 'w_256',
-                ).value,
-              )
-              .w1024(
-                foundUserEntity.profile.file.metas.find(
-                  (d) => d.key === 'w_1024',
+                  (d) => d.key === FileMetaType.PUBLIC_ID,
                 ).value,
               )
               .createdAt(getDateFormat(foundUserEntity.profile.file.createdAt))

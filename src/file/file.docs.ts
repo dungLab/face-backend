@@ -8,9 +8,9 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { FileController } from '@/file/file.controller';
-import { FolderType } from '@/s3/constants';
 import { FileReponseDto } from '@/file/dtos/request/file-response.dto';
 import { SwaggerMethodDoc } from '@/common/docs/types';
+import { FolderType } from '@/file/constants';
 
 export const ApiDocs: SwaggerMethodDoc<FileController> = {
   uploadImage(summary) {

@@ -5,7 +5,6 @@ import { configuration } from '@/common/config/configuration';
 import { ormconfig } from '@/common/config/ormconfig';
 import { HttpModule } from '@/http/http.module';
 import { PhotoModule } from '@/photo/photo.module';
-import { S3Module } from '@/s3/s3.module';
 import { UserModule } from '@/user/user.module';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -36,8 +35,6 @@ import { LoggerMiddleware } from '@/common/middlewares/logger.middleware';
     UserModule,
 
     PhotoModule,
-
-    S3Module,
 
     FileModule,
 

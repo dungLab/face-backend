@@ -19,6 +19,7 @@ import { PhotoCreateInfoResponseDto } from '@/photo/dtos/response/photo-create-i
 import { EvaluationRepository } from '@/evaluation/repositories/evaluation.repository';
 import { PhotoListResponseDto } from '@/photo/dtos/response/photo-list-response.dto';
 import { FileReponseDto } from '@/file/dtos/request/file-response.dto';
+import { FileMetaType } from '@/file/constants';
 
 @Injectable()
 export class PhotoService {
@@ -159,9 +160,11 @@ export class PhotoService {
             Builder(FileReponseDto)
               .id(_d.file.id)
               .type(_d.file.type)
-              .originalUrl(_d.file.metas.find((d) => d.key === 'origin').value)
-              .w256(_d.file.metas.find((d) => d.key === 'w_256').value)
-              .w1024(_d.file.metas.find((d) => d.key === 'w_1024').value)
+              .url(_d.file.metas.find((d) => d.key === FileMetaType.URL).value)
+              .publicId(
+                _d.file.metas.find((d) => d.key === FileMetaType.PUBLIC_ID)
+                  .value,
+              )
               .createdAt(getDateFormat(_d.file.createdAt))
               .build(),
           )
@@ -217,14 +220,14 @@ export class PhotoService {
         Builder(FileReponseDto)
           .id(foundPhotoEntity.file.id)
           .type(foundPhotoEntity.file.type)
-          .originalUrl(
-            foundPhotoEntity.file.metas.find((d) => d.key === 'origin').value,
+          .url(
+            foundPhotoEntity.file.metas.find((d) => d.key === FileMetaType.URL)
+              .value,
           )
-          .w256(
-            foundPhotoEntity.file.metas.find((d) => d.key === 'w_256').value,
-          )
-          .w1024(
-            foundPhotoEntity.file.metas.find((d) => d.key === 'w_1024').value,
+          .publicId(
+            foundPhotoEntity.file.metas.find(
+              (d) => d.key === FileMetaType.PUBLIC_ID,
+            ).value,
           )
           .createdAt(getDateFormat(foundPhotoEntity.file.createdAt))
           .build(),

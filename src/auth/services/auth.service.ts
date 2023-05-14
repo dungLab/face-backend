@@ -1,12 +1,10 @@
-import {
-  OAuthServiceType,
-  OAUTH_SERVICES_INJECT_TOKEN,
-} from '@/auth/constants';
+import { OAuthServiceType } from '@/auth/constants';
 import { KakaoUserInfoDto } from '@/auth/dtos/kakao-user-info.dto';
 import { RefreshTokenDto } from '@/auth/dtos/request/refresh-token.dto';
 import { LoginResponseDto } from '@/auth/dtos/response/login-response.dto';
 import { AbstractOAuthService } from '@/auth/services/abstract-oauth-service';
 import { JwtPayload } from '@/auth/types';
+import { OAUTH_SERVICES_INJECT_TOKEN } from '@/common/constants/inject-token.constant';
 import { ErrorResponse } from '@/common/error-response.exception';
 import { UserService } from '@/user/user.service';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';

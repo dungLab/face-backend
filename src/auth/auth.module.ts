@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { OAUTH_SERVICES_INJECT_TOKEN } from './constants';
 import { KakaoOAuthService } from './services/kakao-oauth.service';
 import { AuthController } from './auth.controller';
 import { NaverOAuthService } from './services/naver-oauth.service';
@@ -9,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtAuthStrategy } from '@/auth/jwt.strategy';
 import { AuthService } from '@/auth/services/auth.service';
 import { ConfigService } from '@nestjs/config';
+import { OAUTH_SERVICES_INJECT_TOKEN } from '@/common/constants/inject-token.constant';
 
 @Module({
   imports: [

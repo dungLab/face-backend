@@ -1,9 +1,9 @@
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { ErrorResponse } from '@/common/error-response.exception';
 import { imageFileFilter } from '@/common/interceptors/image-file.interceptor';
+import { FolderType } from '@/file/constants';
 import { ApiDocs } from '@/file/file.docs';
 import { FileService } from '@/file/file.service';
-import { FolderType } from '@/s3/constants';
 import {
   Controller,
   HttpStatus,

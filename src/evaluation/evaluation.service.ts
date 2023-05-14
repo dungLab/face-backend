@@ -13,6 +13,7 @@ import { Builder } from 'builder-pattern';
 import { PaginationRequestDto } from '@/common/dtos/request/pagination-request.dto';
 import { EPhotoStatus } from '@/photo/constants';
 import { FileReponseDto } from '@/file/dtos/request/file-response.dto';
+import { FileMetaType } from '@/file/constants';
 
 @Injectable()
 export class EvaluationService {
@@ -63,19 +64,14 @@ export class EvaluationService {
               Builder(FileReponseDto)
                 .id(foundDetailPhotoEntity.file.id)
                 .type(foundDetailPhotoEntity.file.type)
-                .originalUrl(
+                .url(
                   foundDetailPhotoEntity.file.metas.find(
-                    (d) => d.key === 'origin',
+                    (d) => d.key === FileMetaType.URL,
                   ).value,
                 )
-                .w256(
+                .publicId(
                   foundDetailPhotoEntity.file.metas.find(
-                    (d) => d.key === 'w_256',
-                  ).value,
-                )
-                .w1024(
-                  foundDetailPhotoEntity.file.metas.find(
-                    (d) => d.key === 'w_1024',
+                    (d) => d.key === FileMetaType.PUBLIC_ID,
                   ).value,
                 )
                 .createdAt(getDateFormat(foundDetailPhotoEntity.file.createdAt))

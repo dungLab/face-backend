@@ -1,22 +1,20 @@
+import { FILE_EXECUTOR_SERVICE_INJECT_TOKEN } from '@/common/constants/inject-token.constant';
 import { getDateFormat } from '@/common/utils/date.util';
-import { FileType } from '@/file/constants';
+import { FileMetaType, FileType, FolderType } from '@/file/constants';
 import { FileReponseDto } from '@/file/dtos/request/file-response.dto';
-import { FileMetaEntity } from '@/file/entities/file-meta.entity';
 import { FileMetaRepository } from '@/file/repositories/file-meta.repository';
 import { FileRepository } from '@/file/repositories/file.repository';
-import { FolderType, S3BucketType } from '@/s3/constants';
-import { S3Service } from '@/s3/s3.service';
-import { Injectable } from '@nestjs/common';
+import { FileExecutorService } from '@/file/services/file-executor.service';
+import { Inject, Injectable } from '@nestjs/common';
 import { Builder } from 'builder-pattern';
 import { DataSource } from 'typeorm';
 
 @Injectable()
 export class FileService {
-  static readonly FILE_SIZE: string[] = ['origin', 'w_256', 'w_1024'];
-
   constructor(
     //services
-    private readonly s3Service: S3Service,
+    @Inject(FILE_EXECUTOR_SERVICE_INJECT_TOKEN)
+    private readonly fileExecutorService: FileExecutorService,
     private readonly dataSource: DataSource,
 
     //repositories
@@ -28,28 +26,23 @@ export class FileService {
     folderType: FolderType,
     image: Express.Multer.File,
   ): Promise<FileReponseDto> {
-    const uploadedFileUrl = await this.s3Service.uploadAndGetUrl(
+    const { url, publicId } = await this.fileExecutorService.upload(
       image,
-      S3BucketType.FACE,
       folderType,
     );
 
-    const { file, metas } = await this.saveFile(
-      FileType.IMAGE,
-      uploadedFileUrl,
-    );
+    const { file, metas } = await this.saveFile(FileType.IMAGE, url, publicId);
 
     return Builder(FileReponseDto)
       .id(file.id)
       .type(file.type)
-      .originalUrl(metas.find((d) => d.key === 'origin').value)
-      .w256(metas.find((d) => d.key === 'w_256').value)
-      .w1024(metas.find((d) => d.key === 'w_1024').value)
+      .url(metas.find((d) => d.key === FileMetaType.URL).value)
+      .publicId(metas.find((d) => d.key === FileMetaType.PUBLIC_ID).value)
       .createdAt(getDateFormat(file.createdAt))
       .build();
   }
 
-  async saveFile(type: FileType, url: string) {
+  async saveFile(type: FileType, url: string, publicId: string) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
 
@@ -60,19 +53,19 @@ export class FileService {
       });
 
       const savedFileEntity = await queryRunner.manager.save(fileEntity);
-      const originUrlSplitArr = url.split('origin');
 
-      const fileMetaEntities = FileService.FILE_SIZE.map(
-        (key): FileMetaEntity => {
-          const value = `${originUrlSplitArr[0]}${key}${originUrlSplitArr[1]}`;
-
-          return this.fileMetaRepository.create({
-            fileId: savedFileEntity.id,
-            key,
-            value,
-          });
-        },
-      );
+      const fileMetaEntities = [
+        this.fileMetaRepository.create({
+          fileId: savedFileEntity.id,
+          key: 'url',
+          value: url,
+        }),
+        this.fileMetaRepository.create({
+          fileId: savedFileEntity.id,
+          key: 'public_id',
+          value: publicId,
+        }),
+      ];
 
       const savedFileMetaEntities = await queryRunner.manager.save(
         fileMetaEntities,

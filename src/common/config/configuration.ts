@@ -40,6 +40,10 @@ function getSecretConfiguration() {
       secretAccessKey: requireEnv('SECRET_ACCESS_KEY'),
       region: requireEnv('REGION'),
     },
+    cloudinary: {
+      apiKey: requireEnv('CLOUDINARY_API_KEY'),
+      apiSecret: requireEnv('CLOUDINARY_API_SECRET'),
+    },
     jwt: {
       secretKey: requireEnv('JWT_SECRET_KEY'),
     },
