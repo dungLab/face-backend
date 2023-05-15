@@ -11,7 +11,7 @@ import { ProfileEntity } from '@/user/entities/profile.entity';
 import { FileMetaEntity } from '@/file/entities/file-meta.entity';
 import { AbstractEntity } from '@/common/abstract-entity';
 
-@Entity('FILE')
+@Entity('files')
 export class FileEntity extends AbstractEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;

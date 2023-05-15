@@ -12,12 +12,12 @@ import {
 import { ProfileEntity } from '@/user/entities/profile.entity';
 import { AbstractEntity } from '@/common/abstract-entity';
 
-@Entity('USER')
 @Index('idx_email_deleted_at', ['email', 'deletedAt'])
 @Index('idx_email_type_deleted_at', ['email', 'type', 'deletedAt'])
 @Index('uk_email_type', ['email', 'type'], {
   unique: true,
 })
+@Entity('users')
 export class UserEntity extends AbstractEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;

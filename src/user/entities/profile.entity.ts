@@ -10,10 +10,10 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity('PROFILE')
 @Index('uk_user_id', ['userId'], {
   unique: true,
 })
+@Entity('profiles')
 export class ProfileEntity extends AbstractEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;

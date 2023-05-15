@@ -13,7 +13,7 @@ import {
 @Index('uk_user_id_photo_id', ['userId', 'photoId'], {
   unique: true,
 })
-@Entity('EVALUATION')
+@Entity('evaluations')
 export class EvaluationEntity extends AbstractEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;

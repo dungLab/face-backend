@@ -1,4 +1,4 @@
-create table face.FILE
+create table face.files
 (
     id         int unsigned auto_increment
         primary key,
@@ -8,7 +8,7 @@ create table face.FILE
     deleted_at timestamp(6)                              null
 );
 
-create table face.FILE_META
+create table face.file_metas
 (
     id      int unsigned auto_increment
         primary key,
@@ -19,7 +19,7 @@ create table face.FILE_META
         foreign key (file_id) references face.FILE (id)
 );
 
-create table face.HASHTAG
+create table face.hashtags
 (
     id         int unsigned auto_increment
         primary key,
@@ -35,7 +35,7 @@ create index idx_name
 create index idx_name_deletedAt
     on face.HASHTAG (name, deleted_at);
 
-create table face.`LOG-EVALUATION`
+create table face.log_evaluations
 (
     id         int unsigned auto_increment
         primary key,
@@ -46,7 +46,7 @@ create table face.`LOG-EVALUATION`
     created_at timestamp(6) default CURRENT_TIMESTAMP(6) not null
 );
 
-create table face.USER
+create table face.users
 (
     id            int unsigned auto_increment
         primary key,
@@ -60,7 +60,7 @@ create table face.USER
         unique (email, type)
 );
 
-create table face.PHOTO
+create table face.photos
 (
     id          int unsigned auto_increment
         primary key,
@@ -79,7 +79,7 @@ create table face.PHOTO
         foreign key (user_id) references face.USER (id)
 );
 
-create table face.EVALUATION
+create table face.evaluations
 (
     id         int unsigned auto_increment
         primary key,
@@ -97,7 +97,7 @@ create table face.EVALUATION
         foreign key (user_id) references face.USER (id)
 );
 
-create table face.`PHOTO-HASHTAG`
+create table face.photo_hashtags
 (
     id         int unsigned auto_increment
         primary key,
@@ -112,7 +112,7 @@ create table face.`PHOTO-HASHTAG`
         foreign key (photo_id) references face.PHOTO (id)
 );
 
-create table face.PROFILE
+create table face.profiles
 (
     id           int unsigned auto_increment
         primary key,

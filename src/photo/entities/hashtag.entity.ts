@@ -10,7 +10,7 @@ import {
 
 @Index('idx_name', ['name'])
 @Index('idx_name_deletedAt', ['name', 'deletedAt'])
-@Entity('HASHTAG')
+@Entity('hashtags')
 export class HashTagEntity extends AbstractEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;
